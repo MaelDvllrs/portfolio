@@ -1,0 +1,43 @@
+const base =
+  "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-colors disabled:pointer-events-none disabled:opacity-40";
+
+// Ombres internes : reflet clair en haut + ombre en bas → effet d'épaisseur.
+const variants = {
+  primary:
+    "border border-white/10 bg-neutral-950 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),inset_0_0_6px_rgba(255,255,255,0.12),inset_0_-2px_3px_rgba(0,0,0,0.5)] hover:bg-neutral-800",
+  brand:
+    "bg-white text-neutral-950 shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-2px_3px_rgba(0,0,0,0.12)] hover:bg-neutral-100",
+  glass:
+    "border border-white/20 bg-white/10 text-white backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-2px_3px_rgba(0,0,0,0.2)] hover:bg-white/15",
+};
+
+const sizes = {
+  sm: "px-4 py-2 text-sm",
+  default: "px-6 py-3 text-sm",
+  lg: "px-8 py-4 text-base",
+  icon: "size-11 text-sm",
+};
+
+type ButtonStyle = { variant?: keyof typeof variants; size?: keyof typeof sizes };
+
+const classes = ({ variant = "primary", size = "default" }: ButtonStyle, className = "") =>
+  `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+
+export function ButtonLink({
+  variant = "brand",
+  size,
+  className,
+  ...props
+}: React.ComponentProps<"a"> & ButtonStyle) {
+  return <a className={classes({ variant, size }, className)} {...props} />;
+}
+
+export function Button({
+  variant,
+  size,
+  className,
+  type = "button",
+  ...props
+}: React.ComponentProps<"button"> & ButtonStyle) {
+  return <button type={type} className={classes({ variant, size }, className)} {...props} />;
+}
