@@ -6,7 +6,7 @@ import techAndFestLogo from "@/assets/image/logo-client/TECH-AND-FEST-LOGO-BLANC
 export const site = {
   name: "Maël Devillers",
   role: "Fullstack Developer · AI · Product",
-  email: "contact@example.com", // TODO
+  email: "mael.devillers@gmail.com",
   links: [
     { label: "GitHub", href: "https://github.com/MaelDvllrs" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/mael-devillers-b12a5b236" },
