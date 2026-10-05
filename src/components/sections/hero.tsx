@@ -1,25 +1,18 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import { siWebflow } from "simple-icons";
 import { site } from "@/content/site";
 import { ButtonLink } from "@/components/ui/button";
-import backgroundHero from "@/assets/image/background_hero.avif";
-import heroFirstPlan from "@/assets/image/hero_first_plan.avif";
 
 gsap.registerPlugin(useGSAP, SplitText);
 
-// Dimensions réelles des images, en dur : Turbopack ne lit pas les dimensions des AVIF
-// importés (il renvoie 1×1). À mettre à jour si les images changent.
-const BG = { width: 2500, height: 1401 };
-const FG = { width: 2500, height: 783 };
-const BG_RATIO = BG.width / BG.height;
-
-// Calques (du fond vers l'avant) : arrière-plan → titre → premier plan → fondu → texte + boutons.
-// Les deux images sont statiques ; seul le texte est animé à l'apparition.
+// Hero plein écran sur le fond de la page (couleurs du thème) :
+// à gauche, centrés verticalement : titre, preuve sociale, texte et boutons ; logo à droite.
+// Seul le texte est animé à l'apparition.
 export function Hero() {
   const { hero } = site;
   const sectionRef = useRef<HTMLElement>(null);
@@ -50,7 +43,8 @@ export function Hero() {
           // 130 % (et non 100 %) : la ligne doit partir sous le masque agrandi
           .from(title.lines, { yPercent: 130, duration: 1.2, stagger: 0.1 }, 0.3)
           .from(subtitle.lines, { yPercent: 100, duration: 1, stagger: 0.08 }, 0.75)
-          // Boutons : simple fondu, une fois le texte presque en place
+          // Preuve sociale et boutons : simple fondu
+          .from("[data-hero-badge]", { opacity: 0, duration: 0.8 }, 0.6)
           .from("[data-hero-button]", { opacity: 0, duration: 0.8, stagger: 0.1 }, 1.2);
       });
 
@@ -64,84 +58,41 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      // Conteneur de taille : cqw/cqh = dimensions du hero (sans la scrollbar).
-      // --fg-w : largeur du premier plan, qui reproduit le object-cover du fond.
-      // --fg-h : sa hauteur rendue, d'après les proportions de l'image.
-      className="relative isolate h-svh overflow-hidden bg-neutral-950 text-white [container-type:size]"
-      style={
-        {
-          "--fg-w": `max(100cqw, 100cqh * ${BG_RATIO})`,
-          "--fg-h": `calc(var(--fg-w) * ${FG.height / FG.width})`,
-        } as React.CSSProperties
-      }
+      id="hero"
+      // sans fond propre : les particules (en arrière-plan de la page) doivent rester visibles
+      className="relative flex h-svh px-2 text-foreground"
     >
-      <Image
-        src={backgroundHero}
-        alt=""
-        fill
-        sizes="100vw"
-        fetchPriority="high"
-        loading="eager"
-        className="object-cover brightness-90" // fond légèrement assombri
-      />
-
-      {/* Titre derrière le premier plan, calé à gauche du contenu. Sur grand écran, plongé dans
-          les vagues (3.5rem sous le haut de l'image) pour être masqué de façon irrégulière ;
-          sur mobile, à peine enfoncé (2rem) pour rester lisible.
-          Invisible jusqu'à l'intro (évite un flash avant l'hydratation). */}
+      {/* le logo en particules à droite est dessiné par ParticleField (voir src/app/page.tsx) */}
+      {/* invisible jusqu'à l'intro (évite un flash avant l'hydratation) */}
       <div
-        className="absolute inset-x-0 px-2 [--title-overlap:2rem] lg:[--title-overlap:3.5rem]"
-        style={{ bottom: "calc(var(--fg-h) - var(--title-overlap))" }}
+        data-hero-reveal
+        className="invisible relative mx-auto flex w-full max-w-content flex-col justify-end gap-8 px-6 pt-24 pb-10 lg:justify-center lg:pb-0"
       >
-        <div className="mx-auto max-w-content px-6">
-          <h1
-            ref={titleRef}
-            data-hero-reveal
-            className="invisible max-w-5xl text-left text-6xl lg:pl-12 leading-[0.95] font-normal tracking-tight text-balance sm:text-8xl"
-          >
-            {hero.title}
-          </h1>
-        </div>
-      </div>
-
-      {/* Premier plan ancré en bas, à la même échelle que le fond */}
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2"
-        style={{ width: "var(--fg-w)" }}
-      >
-        <Image
-          src={heroFirstPlan}
-          width={FG.width}
-          height={FG.height}
-          alt=""
-          sizes={`(max-aspect-ratio: ${BG.width}/${BG.height}) ${Math.ceil(BG_RATIO * 100)}vh, 100vw`}
-          fetchPriority="high"
-          loading="eager"
-          className="block h-auto w-full"
-        />
-      </div>
-
-      {/* Fondu noir en bas pour faire ressortir les textes */}
-      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-      {/* Texte + boutons, fixes en bas à droite */}
-      <div className="absolute inset-x-0 bottom-0 px-2">
-        <div
-          data-hero-reveal
-          className="invisible mx-auto flex max-w-content justify-end px-6 pb-8 sm:pb-10"
+        <h1
+          ref={titleRef}
+          className="max-w-2xl text-6xl leading-[0.95] font-normal tracking-tight text-balance sm:text-7xl lg:text-8xl"
         >
-          <div className="flex max-w-sm flex-col gap-6 lg:items-end">
-            <p ref={subtitleRef} className="text-base text-pretty text-white/90 lg:text-right">
-              {hero.subtitle}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <ButtonLink data-hero-button href={hero.primaryCta.href} variant="brand">
-                {hero.primaryCta.label}
-              </ButtonLink>
-              <ButtonLink data-hero-button href={hero.secondaryCta.href} variant="glass">
-                {hero.secondaryCta.label}
-              </ButtonLink>
-            </div>
+          {hero.title}
+        </h1>
+
+        <div className="flex max-w-md flex-col gap-6">
+          {/* Preuve sociale : partenaire certifié Webflow */}
+          <p data-hero-badge className="flex items-center gap-2 text-xs font-medium">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden>
+              <path d={siWebflow.path} />
+            </svg>
+            Webflow Certified Partner
+          </p>
+          <p ref={subtitleRef} className="text-base text-pretty text-muted">
+            {hero.subtitle}
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink data-hero-button href={hero.primaryCta.href} variant="primary">
+              {hero.primaryCta.label}
+            </ButtonLink>
+            <ButtonLink data-hero-button href={hero.secondaryCta.href} variant="secondary">
+              {hero.secondaryCta.label}
+            </ButtonLink>
           </div>
         </div>
       </div>

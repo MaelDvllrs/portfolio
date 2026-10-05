@@ -65,12 +65,13 @@ export function WorkSlider({ projects }: { projects: WorkProject[] }) {
           ))}
         </div>
 
-        {/* Flèches (jamais désactivées : le slider boucle) */}
-        <div className="flex gap-2">
-          <Button size="icon" aria-label="Previous slide" onClick={() => swiper?.slidePrev()}>
+        {/* Flèches (jamais désactivées : le slider boucle), de la couleur du fond :
+            les particules viennent les entourer (data-particles) */}
+        <div className="flex gap-2" data-particles="work-arrows">
+          <Button size="icon" variant="secondary" aria-label="Previous slide" onClick={() => swiper?.slidePrev()}>
             <ArrowIcon className="size-4 rotate-180" />
           </Button>
-          <Button size="icon" aria-label="Next slide" onClick={() => swiper?.slideNext()}>
+          <Button size="icon" variant="secondary" aria-label="Next slide" onClick={() => swiper?.slideNext()}>
             <ArrowIcon />
           </Button>
         </div>

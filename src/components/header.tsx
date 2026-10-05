@@ -11,7 +11,7 @@ const nav = [
   { label: "About", href: "#about" },
 ];
 
-// Barre fixe et fine : transparente (texte foncé, le haut du hero est clair) tout en haut ;
+// Barre fixe et fine : transparente tout en haut (par-dessus le hero, couleurs du thème) ;
 // dès qu'on scrolle, fond de la couleur de la page et fine bordure.
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -28,7 +28,7 @@ export function Header() {
       className={`fixed inset-x-0 top-0 z-50 border-b px-2 transition-colors duration-300 ${
         scrolled
           ? "border-border bg-background text-foreground"
-          : "border-transparent bg-transparent text-neutral-950"
+          : "border-transparent bg-transparent text-foreground"
       }`}
     >
       <div className="mx-auto flex h-14 max-w-content items-center justify-between px-6">
@@ -37,7 +37,8 @@ export function Header() {
             <Logo className="h-6 w-auto" />
             <span className="text-sm font-medium tracking-tight">trymael</span>
           </a>
-          <nav className="flex gap-6 text-sm">
+          {/* liens masqués sur petit écran : il ne reste que le logo et Contact */}
+          <nav className="flex gap-6 text-sm max-sm:hidden">
             {nav.map((item) => (
               <a key={item.href} href={item.href} className="opacity-80 transition-opacity hover:opacity-100">
                 {item.label}

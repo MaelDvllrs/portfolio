@@ -15,7 +15,13 @@ export function Contact() {
         <h2 className="text-[min(13vw,13rem)] leading-none font-normal tracking-normal whitespace-nowrap text-background [paint-order:stroke_fill] [-webkit-text-stroke:3px_var(--foreground)]">
           {contact.title}
         </h2>
-        <ButtonLink href={`mailto:${site.email}`} variant="primary" size="lg" className="mt-12">
+        <ButtonLink
+          href={`mailto:${site.email}`}
+          variant="primary"
+          size="lg"
+          className="mt-12"
+          data-particles="contact-cta"
+        >
           {contact.cta}
           <ArrowIcon className="size-5" />
         </ButtonLink>

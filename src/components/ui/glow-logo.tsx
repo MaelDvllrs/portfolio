@@ -94,7 +94,7 @@ export function GlowLogo({ className = "" }: { className?: string }) {
 
   return (
     <div ref={rootRef} className={`group ${className}`}>
-      <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" aria-hidden>
+      <svg ref={svgRef} data-particles="about-logo" viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" aria-hidden>
         <defs>
           {/* lueur principale sur le contour */}
           <radialGradient ref={mainRef} id={main} gradientUnits="userSpaceOnUse" cx={CX} cy={CY} r={RADIUS}>

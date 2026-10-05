@@ -95,7 +95,7 @@ export function WhatIBuild() {
 
   return (
     <Frame id="services">
-      <div ref={sectionRef} style={{ height: `${(count + 1) * 100}svh` }}>
+      <div ref={sectionRef} data-particles="services-track" style={{ height: `${(count + 1) * 100}svh` }}>
         <div className="sticky top-0 flex h-svh flex-col gap-8 pt-16 sm:gap-10 sm:pt-20">
           <h2 className={`${h2Class} text-center`}>{whatIBuild.title}</h2>
 

@@ -3,8 +3,14 @@ const base =
 
 // Ombres internes : reflet clair en haut + ombre en bas → effet d'épaisseur.
 const variants = {
+  // couleur du texte du thème (noir en clair, blanc en sombre), texte de la couleur du fond.
+  // (survol via la couleur de fond, pas l'opacité : une transition d'opacité casserait les
+  // fondus GSAP appliqués aux boutons)
   primary:
-    "border border-white/10 bg-neutral-950 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),inset_0_0_6px_rgba(255,255,255,0.12),inset_0_-2px_3px_rgba(0,0,0,0.5)] hover:bg-neutral-800",
+    "border border-white/10 bg-foreground text-background shadow-[inset_0_1px_0_rgba(255,255,255,0.25),inset_0_0_6px_rgba(255,255,255,0.12),inset_0_-2px_3px_rgba(0,0,0,0.5)] hover:bg-foreground/85",
+  // bordé, aux couleurs du thème (fond de page)
+  secondary:
+    "border border-border bg-background text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-2px_3px_rgba(0,0,0,0.06)] hover:bg-surface",
   brand:
     "bg-white text-neutral-950 shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-2px_3px_rgba(0,0,0,0.12)] hover:bg-neutral-100",
   glass:
