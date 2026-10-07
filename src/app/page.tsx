@@ -6,6 +6,7 @@ import { Work } from "@/components/sections/work";
 import { About } from "@/components/sections/about";
 import { Stack } from "@/components/sections/stack";
 import { Contact } from "@/components/sections/contact";
+import { Blog } from "@/components/sections/blog";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Divider />
       <Stack />
       <Divider />
+      <Blog />
       <Contact />
       <Divider />
     </main>

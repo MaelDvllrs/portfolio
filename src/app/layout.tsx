@@ -6,6 +6,7 @@ import { site } from "@/content/site";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Mascots } from "@/components/mascot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,12 +42,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
       </head>
-      <body className="flex min-h-svh flex-col font-sans">
+      <body className="relative flex min-h-svh flex-col font-sans">
         <SmoothScroll />
         {/* communs à toutes les pages */}
         <Header />
         {children}
         <Footer />
+        {/* une mascotte, petite et sombre, qui se promène sur toute la hauteur de la page (elle
+            défile avec le contenu ; au-dessus du contenu, sous le header, sans bloquer les clics) */}
+        <Mascots count={1} scale={0.6} dim className="absolute inset-0 z-40" />
       </body>
     </html>
   );

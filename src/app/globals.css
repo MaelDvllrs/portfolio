@@ -78,6 +78,13 @@ body {
   color: var(--foreground);
 }
 
+/* Sélection de texte aux couleurs inversées du thème : blanc sur noir en sombre,
+   noir sur blanc en clair */
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
 /* FAQ (components/faq.tsx) : ouverture animée des <details> (navigateurs récents) */
 .faq {
   interpolate-size: allow-keywords;

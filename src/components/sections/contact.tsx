@@ -16,7 +16,7 @@ export function Contact() {
           {contact.title}
         </h2>
         <ButtonLink
-          href={`mailto:${site.email}`}
+          href="/contact"
           variant="primary"
           className="mt-6"
           data-particles="contact-cta"

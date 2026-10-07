@@ -31,6 +31,12 @@ export const site = {
     { name: "Tech and Fest", logo: techAndFestLogo },
   ],
 
+  // Page /contact
+  contactPage: {
+    title: "Contact",
+    intro: "A project, a question or just want to say hi? Send me a message and I'll get back to you within 48 hours.", // TODO : à ajuster
+  },
+
   // Pages /blog
   blog: {
     title: "Blog",

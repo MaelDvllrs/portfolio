@@ -3,7 +3,7 @@
 
 export type Dir = "S" | "SE" | "E" | "NE" | "N" | "NW" | "W" | "SW";
 
-const C = {
+export const C = {
   ink: "#1A1C22",
   body: "#3A3F56",
   edge: "#6B6F7E",

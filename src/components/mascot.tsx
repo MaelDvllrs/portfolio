@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { sprite, type Dir, type Frame } from "./mascot-sprite";
+import { C, sprite, type Dir, type Frame } from "./mascot-sprite";
 
 // Mascottes pixel art (grille 16×16) qui se promènent dans toute la zone du parent.
 // - 8 orientations : face, dos, côtés et 3/4, déduites du décalage du visage ;
@@ -10,7 +10,8 @@ import { sprite, type Dir, type Frame } from "./mascot-sprite";
 // - pseudo-3D : plus une mascotte est haute dans la zone, plus elle est loin → plus petite,
 //   plus lente à la verticale (perspective), et dessinée derrière celles du premier plan.
 // Une seule boucle d'animation pour toutes les mascottes, active seulement quand la zone est visible.
-// Le parent doit être en `relative` : les mascottes occupent tout son espace.
+// Zone : par défaut tout le parent (en `relative`) ; `className` permet une autre zone, ex.
+// `fixed inset-0` pour tout l'écran. `scale` réduit la taille, `dim` passe en palette sombre.
 
 // Direction (8) à partir du vecteur vitesse ; y vers le bas = vers le spectateur (face)
 function direction(dx: number, dy: number): Dir {
@@ -26,10 +27,31 @@ const DEPTH = 0.6; // la verticale est parcourue plus lentement (perspective)
 const SCALE_FAR = 0.6; // échelle en haut de la zone
 const SCALE_NEAR = 1.15; // échelle en bas de la zone
 
+// Palette sombre (`dim`) : corps de la couleur du fond de la page, contour plus clair (couleur
+// secondaire du thème), visage plus sombre ; les blancs et reflets ne changent pas.
+const DIM_COLORS: Record<string, string> = {
+  [C.body]: "var(--background)",
+  [C.edge]: "var(--muted)",
+  [C.ink]: "#0a0a0c",
+};
+
 type Pose = { dir: Dir; frame: Frame; blink: boolean };
 const STANDING: Pose = { dir: "S", frame: 0, blink: false };
 
-export function Mascots({ count = 3 }: { count?: number }) {
+export function Mascots({
+  count = 3,
+  scale = 1,
+  dim = false,
+  className = "absolute inset-0 z-0",
+}: {
+  count?: number;
+  /** Taille relative (1 = taille d'origine) */
+  scale?: number;
+  /** Couleurs assombries */
+  dim?: boolean;
+  /** Position et taille de la zone de promenade */
+  className?: string;
+}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const bodiesRef = useRef<(HTMLDivElement | null)[]>([]);
   const [poses, setPoses] = useState<Pose[]>(() => Array.from({ length: count }, () => STANDING));
@@ -42,10 +64,11 @@ export function Mascots({ count = 3 }: { count?: number }) {
     const area = () => root.getBoundingClientRect();
     const randomPoint = () => {
       const { width, height } = area();
-      const margin = SIZE * 0.6;
+      const size = SIZE * scale;
+      const margin = size * 0.6;
       return {
         x: margin + Math.random() * Math.max(0, width - margin * 2),
-        y: SIZE * 0.7 + Math.random() * Math.max(0, height - SIZE * 0.9),
+        y: size * 0.7 + Math.random() * Math.max(0, height - size * 0.9),
       };
     };
 
@@ -70,9 +93,9 @@ export function Mascots({ count = 3 }: { count?: number }) {
       const { pos } = walkers[i];
       const { height } = area();
       const depth = height ? pos.y / height : 1;
-      const scale = SCALE_FAR + (SCALE_NEAR - SCALE_FAR) * depth;
+      const perspective = SCALE_FAR + (SCALE_NEAR - SCALE_FAR) * depth;
       // pos = point des pieds ; le sprite est ancré en bas au centre
-      body.style.transform = `translate(${pos.x - SIZE / 2}px, ${pos.y - SIZE}px) scale(${scale})`;
+      body.style.transform = `translate(${pos.x - SIZE / 2}px, ${pos.y - SIZE}px) scale(${perspective * scale})`;
       // la plus proche (la plus basse) passe devant
       body.style.zIndex = String(Math.round(pos.y));
     };
@@ -137,10 +160,14 @@ export function Mascots({ count = 3 }: { count?: number }) {
       io.disconnect();
       stop();
     };
-  }, [count]);
+  }, [count, scale]);
 
   return (
-    <div ref={rootRef} aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div
+      ref={rootRef}
+      aria-hidden
+      className={`pointer-events-none overflow-hidden ${className}`}
+    >
       {poses.map((pose, i) => (
         <div
           key={i}
@@ -152,7 +179,7 @@ export function Mascots({ count = 3 }: { count?: number }) {
         >
           {/* ombre au sol */}
           <span className="absolute -bottom-1 left-1/2 h-2 w-10 -translate-x-1/2 rounded-full bg-black/15" />
-          <Sprite {...pose} />
+          <Sprite {...pose} dim={dim} />
         </div>
       ))}
     </div>
@@ -160,12 +187,13 @@ export function Mascots({ count = 3 }: { count?: number }) {
 }
 
 // Mémoïsé : ne se redessine que si la pose de cette mascotte change
-const Sprite = memo(function Sprite({ dir, frame, blink }: Pose) {
+const Sprite = memo(function Sprite({ dir, frame, blink, dim }: Pose & { dim: boolean }) {
   const pixels = useMemo(() => sprite(dir, frame, blink), [dir, frame, blink]);
   return (
     <svg viewBox="0 0 16 16" width={SIZE} height={SIZE} shapeRendering="crispEdges" className="relative">
       {pixels.map(([x, y, c], i) => (
-        <rect key={i} x={x} y={y} width={1} height={1} fill={c} />
+        // couleur en style (et non en attribut) : les variables CSS du thème y sont lues
+        <rect key={i} x={x} y={y} width={1} height={1} style={{ fill: (dim && DIM_COLORS[c]) || c }} />
       ))}
     </svg>
   );

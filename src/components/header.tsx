@@ -30,7 +30,7 @@ export function Header() {
           </nav>
         </div>
 
-        <ButtonLink href="/#contact" variant="primary" size="sm">
+        <ButtonLink href="/contact" variant="primary" size="sm">
           Contact
         </ButtonLink>
       </div>
