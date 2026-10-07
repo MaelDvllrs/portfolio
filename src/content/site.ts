@@ -7,19 +7,21 @@ export const site = {
   name: "Maël Devillers",
   role: "Fullstack Developer · AI · Product",
   email: "mael.devillers@gmail.com",
+  // URL publique du site (liens canoniques, sitemap, Open Graph) : variable SITE_URL en production
+  url: process.env.SITE_URL ?? "http://localhost:3000",
   links: [
-    { label: "GitHub", href: "https://github.com/MaelDvllrs" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/mael-devillers-b12a5b236" },
+    { label: "GitHub", href: "https://github.com/MaelDvllrs" },
     { label: "X", href: "https://x.com/marl_2304" },
   ],
 
-  hero: {
-    label: "Fullstack Developer · AI · Product",
-    title: "I build products that actually ship.",    subtitle:
-      "Fullstack developer building web products, SaaS and AI-powered experiences from idea to production.",
-    primaryCta: { label: "View my work", href: "#work" },
-    secondaryCta: { label: "Contact me", href: "#contact" },
-    stack: ["React", "Next.js", "Node.js", "TypeScript", "AI"],
+  // En-tête façon profil (src/components/sections/hero.tsx)
+  profile: {
+    name: "Mael",
+    handle: "@trymael",
+    bio: ["Fullstack developer building web products, SaaS and AI-powered experiences from idea to production."],
+    location: "Paris, France",
+    timeZone: "Europe/Paris", // heure affichée à côté de la localisation
   },
 
   // Logos du bandeau ajoutés en statique (fichiers dans src/assets/image/logo-client).
@@ -29,6 +31,18 @@ export const site = {
     { name: "Tech and Fest", logo: techAndFestLogo },
   ],
 
+  // Pages /blog
+  blog: {
+    title: "Blog",
+    intro: "Notes on building web products, SaaS and AI tools: what worked, what didn't.", // TODO : à ajuster
+  },
+
+  // Page /work (hub de tous les projets)
+  workHub: {
+    title: "Work",
+    intro: "Products, SaaS and AI tools I designed and built, from idea to production.", // TODO : à ajuster
+  },
+
   work: {
     title: "Selected work",
     projects: [
@@ -36,41 +50,46 @@ export const site = {
         name: "Wenoble Dashboard",
         description: "TODO — one sentence describing the product.",
         type: "SaaS",
-        stack: ["Next.js", "TypeScript", "Supabase"],
+        // TODO : période du projet
+        startYear: null as number | null,
+        endYear: null as number | null,
+        ongoing: false,
+        tools: ["Next.js", "TypeScript", "Supabase"],
         image: null as string | null, // TODO : image de fond de la card (16/9)
         logo: null as string | null, // TODO : logo du projet
-        href: "#", // TODO
+        url: null as string | null, // TODO : lien externe du projet
       },
       {
         name: "AI Blog / RAG",
         description: "TODO — one sentence describing the product.",
         type: "AI",
-        stack: ["Next.js", "Claude", "RAG"],
+        startYear: null as number | null,
+        endYear: null as number | null,
+        ongoing: false,
+        tools: ["Next.js", "Claude"],
         image: null as string | null,
         logo: null as string | null,
-        href: "#",
+        url: null as string | null,
       },
       {
         name: "Manifeste",
         description: "TODO — one sentence describing the product.",
         type: "Web",
-        stack: ["Next.js", "TypeScript"],
+        startYear: null as number | null,
+        endYear: null as number | null,
+        ongoing: false,
+        tools: ["Next.js", "TypeScript"],
         image: null as string | null,
         logo: null as string | null,
-        href: "#",
+        url: null as string | null,
       },
     ],
   },
 
-  whatIBuild: {
-    title: "From idea to production.",
-    items: [
-      { title: "Think", description: "Architecture & design" },
-      { title: "Build", description: "Frontend + Backend" },
-      { title: "Intelligence", description: "LLM + Agents + RAG" },
-      { title: "Ship", description: "Cloud + CI/CD + Deployment" },
-      { title: "Scale", description: "Performance + Maintenance + Evolution" },
-    ],
+  // Grille des contributions (src/components/sections/github.tsx)
+  github: {
+    title: "Contributions",
+    username: "MaelDvllrs",
   },
 
   about: {

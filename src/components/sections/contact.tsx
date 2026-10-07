@@ -7,23 +7,22 @@ import { ArrowIcon } from "@/components/ui/icons";
 export function Contact() {
   const { contact } = site;
   return (
-    <Frame id="contact" className="relative overflow-hidden py-40 text-center sm:py-56">
+    <Frame id="contact" className="relative overflow-hidden py-16 text-center sm:py-20">
       <DotGrid />
       <div className="relative">
         {/* Texte couleur du fond de la page, à contour couleur du texte (paint-order : le contour passe sous le remplissage,
             il ne mange pas l'intérieur des lettres) */}
-        <h2 className="text-[min(13vw,13rem)] leading-none font-normal tracking-normal whitespace-nowrap text-background [paint-order:stroke_fill] [-webkit-text-stroke:3px_var(--foreground)]">
+        <h2 className="text-[min(12vw,5.5rem)] leading-none font-normal tracking-normal whitespace-nowrap text-background [paint-order:stroke_fill] [-webkit-text-stroke:2px_var(--foreground)]">
           {contact.title}
         </h2>
         <ButtonLink
           href={`mailto:${site.email}`}
           variant="primary"
-          size="lg"
-          className="mt-12"
+          className="mt-6"
           data-particles="contact-cta"
         >
           {contact.cta}
-          <ArrowIcon className="size-5" />
+          <ArrowIcon />
         </ButtonLink>
       </div>
     </Frame>

@@ -6,7 +6,6 @@ import { LOGO_PATHS, LOGO_VIEWBOX } from "@/components/ui/logo";
 // Nuage de particules global (canvas fixe, en arrière-plan, derrière le contenu),
 // piloté par le scroll comme une timeline. Le parcours passe par des étapes, chacune étant une
 // forme complètement formée à une position de scroll précise :
-//   hero      → le logo, à droite (en haut sur mobile)                 (haut de page)
 //   work      → un anneau autour des flèches du slider                  [data-particles="work-arrows"]
 //   services  → le contour de chaque case, Think puis Build… → Scale    [data-particles="services-track"]
 //   about     → l'intérieur du logo lumineux                            [data-particles="about-logo"]
@@ -189,23 +188,10 @@ export function ParticleField() {
       }
     };
 
-    // Hero : à droite sur grand écran, en haut sur mobile
-    const heroLogoRect = (hero: Rect): Rect => {
-      const desktop = width >= 1024;
-      const place = desktop ? { x: 0.72, y: 0.5, size: 0.62 } : { x: 0.5, y: 0.24, size: 0.7 };
-      const scale = Math.min((hero.w * place.size) / LOGO_VIEWBOX.width, (hero.h * place.size) / LOGO_VIEWBOX.height);
-      const w = LOGO_VIEWBOX.width * scale;
-      const h = LOGO_VIEWBOX.height * scale;
-      return { x: hero.x + hero.w * place.x - w / 2, y: hero.y + hero.h * place.y - h / 2, w, h };
-    };
-
     // --- Étapes du parcours ----------------------------------------------------------------------
 
     const steps = (): Step[] => {
       const list: Step[] = [];
-      const hero = document.getElementById("hero");
-      if (hero) list.push({ scroll: 0, fill: logoShape(heroLogoRect(rectOf(hero))) });
-
       const arrows = $('[data-particles="work-arrows"]');
       if (arrows) list.push({ scroll: centeredAt(arrows), fill: ringShape(rectOf(arrows), 14) });
 

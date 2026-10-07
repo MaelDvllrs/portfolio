@@ -1,4 +1,4 @@
-// Icônes de thème (tracés inspirés de Lucide, licence ISC)
+// Icônes (tracés inspirés de Lucide, licence ISC)
 const stroke = {
   fill: "none",
   stroke: "currentColor",
@@ -47,6 +47,26 @@ export function ArrowIcon({ className = "size-4" }: { className?: string }) {
       className={className}
     >
       <path d="M3 8h10M9 4l4 4-4 4" />
+    </svg>
+  );
+}
+
+// Repère de localisation
+export function PinIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" className={className} {...stroke}>
+      <path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+
+// Horloge
+export function ClockIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" className={className} {...stroke}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
     </svg>
   );
 }

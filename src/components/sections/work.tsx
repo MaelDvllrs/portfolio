@@ -9,7 +9,7 @@ export async function Work() {
   return (
     // overflow-hidden sur le cadre : les slides sont coupées aux bordures de la section,
     // pas au padding du contenu
-    <Section id="work" title={site.work.title} className="overflow-hidden">
+    <Section id="work" title={site.work.title} action={{ label: "View all", href: "/work" }} className="overflow-hidden">
       <WorkSlider projects={projects} />
     </Section>
   );

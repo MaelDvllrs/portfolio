@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import { LOGO_PATHS, LOGO_VIEWBOX } from "@/components/ui/logo";
+import { LOGO_PATHS } from "@/components/ui/logo";
 
 // Logo en contour qui s'éclaire au survol, façon logo Next.js de vercel.com/frameworks/nextjs :
 // - base : contour 1px couleur des bordures (text-border) ;
@@ -11,16 +11,29 @@ import { LOGO_PATHS, LOGO_VIEWBOX } from "@/components/ui/logo";
 //   La lumière semble ainsi partir des bordures et se projeter vers l'extérieur, en volume.
 // La position de la lueur suit la souris avec un léger retard (interpolation) pour un mouvement doux.
 
-const { width: W, height: H } = LOGO_VIEWBOX;
-const CX = W / 2;
-const CY = H / 2;
+// viewBox recadré au plus près du tracé (boîte englobante des chemins de LOGO_PATHS,
+// + un demi-trait pour ne pas rogner le contour de 1px) : le logo touche les bords du conteneur
+const PAD = 0.5;
+const VX = 34.75 - PAD;
+const VY = 16.33 - PAD;
+const W = 210.25 - 34.75 + 2 * PAD;
+const H = 186.67 - 16.33 + 2 * PAD;
+const CX = VX + W / 2;
+const CY = VY + H / 2;
 const RADIUS = 70; // rayon de la lueur principale, en unités du viewBox
 const EASE = 0.12; // vitesse de rattrapage (0 → 1)
 const LAYERS = 36; // nombre de copies de l'extrusion
 const DEPTH = 120; // longueur de l'extrusion, en unités du viewBox
 const PERSPECTIVE = 0.25; // agrandissement de la dernière copie (+25 %)
 
-export function GlowLogo({ className = "" }: { className?: string }) {
+export function GlowLogo({
+  className = "",
+  svgClassName = "h-auto w-full",
+}: {
+  className?: string;
+  /** Taille du SVG (garde toujours le ratio du logo) */
+  svgClassName?: string;
+}) {
   const id = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -71,10 +84,10 @@ export function GlowLogo({ className = "" }: { className?: string }) {
     const onMove = (e: PointerEvent) => {
       const rect = svg.getBoundingClientRect();
       // position de la souris en unités du viewBox, puis reflet par rapport au centre
-      const x = ((e.clientX - rect.left) / rect.width) * W;
-      const y = ((e.clientY - rect.top) / rect.height) * H;
-      target.x = W - x;
-      target.y = H - y;
+      const x = VX + ((e.clientX - rect.left) / rect.width) * W;
+      const y = VY + ((e.clientY - rect.top) / rect.height) * H;
+      target.x = 2 * CX - x;
+      target.y = 2 * CY - y;
       if (!raf) raf = requestAnimationFrame(tick);
     };
 
@@ -94,7 +107,7 @@ export function GlowLogo({ className = "" }: { className?: string }) {
 
   return (
     <div ref={rootRef} className={`group ${className}`}>
-      <svg ref={svgRef} data-particles="about-logo" viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" aria-hidden>
+      <svg ref={svgRef} data-particles="about-logo" viewBox={`${VX} ${VY} ${W} ${H}`} className={`overflow-visible ${svgClassName}`} aria-hidden>
         <defs>
           {/* lueur principale sur le contour */}
           <radialGradient ref={mainRef} id={main} gradientUnits="userSpaceOnUse" cx={CX} cy={CY} r={RADIUS}>

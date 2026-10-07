@@ -49,8 +49,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Largeur max des sections (hors hero) */
-  --container-content: 87rem;
+  /* Largeur max de la colonne (hero, sections, header, footer) : format profil */
+  --container-content: 50rem;
 
   /* Rangée de logos : sortie vers le haut / entrée par le bas, avec flou */
   --animate-logo-out: logo-out 0.6s cubic-bezier(0.65, 0, 0.35, 1) both;
@@ -76,4 +76,194 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* FAQ (components/faq.tsx) : ouverture animée des <details> (navigateurs récents) */
+.faq {
+  interpolate-size: allow-keywords;
+}
+.faq details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.3s ease,
+    content-visibility 0.3s allow-discrete;
+}
+.faq details[open]::details-content {
+  block-size: auto;
+}
+
+/* Texte riche du CMS (étude de cas des pages projet, HTML généré par Lexical) */
+.prose-content {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.prose-content > * + * {
+  margin-top: 1em;
+}
+.prose-content :is(h1, h2, h3, h4) {
+  color: var(--foreground);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.prose-content :is(h1, h2) {
+  font-size: 1.125rem;
+}
+/* articles du blog (<article>) : h2 plus grands et plus épais */
+article .prose-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.prose-content h3 {
+  font-size: 1.0625rem;
+  /* ancres du menu : s'arrêtent sous le header fixe (Lenis respecte scroll-margin) */
+  scroll-margin-top: 5rem;
+}
+/* plus d'air autour des titres : avant (fin du paragraphe précédent) et après */
+.prose-content > :is(h1, h2, h3, h4):not(:first-child) {
+  margin-top: 1.75rem;
+}
+.prose-content > :is(h1, h2, h3, h4) + * {
+  margin-top: 1rem;
+}
+/* h3 : encore plus d'espace avant et après */
+.prose-content > h3:not(:first-child) {
+  margin-top: 2.25rem;
+}
+.prose-content > h3 + * {
+  margin-top: 1.25rem;
+}
+.prose-content :is(strong, b) {
+  color: var(--foreground);
+  font-weight: 500;
+}
+.prose-content a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border);
+}
+.prose-content a:hover {
+  text-decoration-color: currentColor;
+}
+.prose-content ul {
+  list-style: disc;
+  padding-left: 1.25em;
+}
+.prose-content ol {
+  list-style: decimal;
+  padding-left: 1.25em;
+}
+.prose-content li + li {
+  margin-top: 0.25em;
+}
+.prose-content blockquote {
+  border-left: 1px solid var(--border);
+  padding-left: 1em;
+  font-style: italic;
+}
+.prose-content code {
+  border-radius: 0.25rem;
+  background: var(--surface);
+  padding: 0.1em 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+.prose-content img {
+  border-radius: 0.375rem;
+  border: 1px solid var(--border);
+}
+.prose-content hr {
+  border-color: var(--border);
+}
+/* Bloc « Embed » du CMS : <figure class="embed" data-format="video|auto"> + iframe collée */
+.prose-content .embed {
+  margin-block: 1.75rem;
+}
+.prose-content .embed iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  border-radius: 0.375rem;
+}
+/* vidéo : 16/9 sur toute la largeur, quelle que soit la taille écrite dans le code */
+.prose-content .embed[data-format="video"] iframe {
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+/* Bloc « Call to action » du CMS : <aside class="cta" data-style="card|subtle"> */
+/* texte à gauche (prend la place restante), bouton à droite ; l'un sous l'autre sur mobile */
+.prose-content .cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-block: 2rem;
+}
+.prose-content .cta-body {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 39.99rem) {
+  .prose-content .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.prose-content .cta-heading {
+  color: var(--foreground);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.prose-content .cta-text {
+  margin-top: 0.25rem;
+}
+.prose-content .cta a {
+  flex-shrink: 0;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+/* encadré : carte bordée, bouton plein (couleurs inversées du thème) */
+.prose-content .cta[data-style="card"] {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  background: radial-gradient(130% 90% at 50% 100%, color-mix(in oklab, var(--foreground) 6%, transparent), transparent 75%);
+}
+.prose-content .cta[data-style="card"] a {
+  border-radius: 0.75rem;
+  background: var(--foreground);
+  padding: 0.5rem 1rem;
+  color: var(--background);
+  transition: background-color 0.2s;
+}
+.prose-content .cta[data-style="card"] a:hover {
+  background: color-mix(in oklab, var(--foreground) 85%, transparent);
+}
+/* discret : ligne entre deux traits, bouton texte avec flèche qui glisse au survol */
+.prose-content .cta[data-style="subtle"] {
+  border-block: 1px solid var(--border);
+  padding-block: 0.875rem;
+}
+.prose-content .cta[data-style="subtle"] a {
+  color: var(--foreground);
+}
+.prose-content .cta[data-style="subtle"] a::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.375rem;
+  transition: transform 0.3s ease-out;
+}
+.prose-content .cta[data-style="subtle"] a:hover::after {
+  transform: translateX(0.25rem);
+}
+.prose-content .embed figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  text-align: center;
 }
