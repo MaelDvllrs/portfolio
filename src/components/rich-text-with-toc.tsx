@@ -1,11 +1,11 @@
 import { withHeadingIds } from "@/lib/rich-text";
 import { TableOfContents } from "@/components/table-of-contents";
 
-// Texte riche du CMS (HTML de confiance, déjà sans enveloppe) avec, à gauche, le menu des h3 :
+// Texte riche du CMS (HTML de confiance, déjà sans enveloppe) avec, à gauche, le menu des titres :
 // menu à 30 % (collant), texte à 70 % ; sur mobile, texte seul en pleine largeur.
-// Pages projet (/work/<slug>) et articles (/blog/<slug>).
-export function RichTextWithToc({ html }: { html: string }) {
-  const content = withHeadingIds(html);
+// `headingLevel` : niveau des titres du menu (h3 par défaut : projets, services ; h2 : articles).
+export function RichTextWithToc({ html, headingLevel = 3 }: { html: string; headingLevel?: 2 | 3 }) {
+  const content = withHeadingIds(html, headingLevel);
   return (
     <div className="sm:flex sm:justify-end">
       {content.headings.length > 0 && (

@@ -71,6 +71,18 @@
       filter: blur(8px);
     }
   }
+
+  /* « What can I build » : barre de progression de l'élément actif (durée réglée en inline) */
+  --animate-progress: progress linear both;
+
+  @keyframes progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
 }
 
 body {
@@ -123,10 +135,13 @@ article .prose-content h2 {
   font-size: 1.5rem;
   font-weight: 600;
 }
+/* ancres du menu (h2 des articles, h3 ailleurs) : s'arrêtent sous le header fixe
+   (Lenis respecte scroll-margin) */
+.prose-content :is(h2, h3) {
+  scroll-margin-top: 5rem;
+}
 .prose-content h3 {
   font-size: 1.0625rem;
-  /* ancres du menu : s'arrêtent sous le header fixe (Lenis respecte scroll-margin) */
-  scroll-margin-top: 5rem;
 }
 /* plus d'air autour des titres : avant (fin du paragraphe précédent) et après */
 .prose-content > :is(h1, h2, h3, h4):not(:first-child) {

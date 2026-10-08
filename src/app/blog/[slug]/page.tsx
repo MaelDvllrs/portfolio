@@ -12,6 +12,9 @@ import { RichTextWithToc } from "@/components/rich-text-with-toc";
 import { Faq, faqJsonLd } from "@/components/faq";
 import { Divider } from "@/components/ui/divider";
 import { BackLink } from "@/components/ui/back-link";
+import { ShareLinks } from "@/components/share-links";
+import { AiSummary } from "@/components/ai-summary";
+import { PrevNext } from "@/components/ui/prev-next";
 import { Contact } from "@/components/sections/contact";
 
 // Pages générées au build pour chaque article publié ; un slug inconnu est rendu à la demande
@@ -88,8 +91,16 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         />
       )}
 
-      <Frame as="div" className="py-2">
+      {/* retour à la liste à gauche ; à droite, flèches vers l'article précédent / suivant
+          (mêmes boutons que le slider Work, à la hauteur du texte « All posts ») */}
+      <Frame as="div" className="flex items-center justify-between gap-4 py-2">
         <BackLink href="/blog">All posts</BackLink>
+        <PrevNext
+          items={posts.map((p) => ({ slug: p.slug, label: p.title }))}
+          currentSlug={post.slug}
+          basePath="/blog"
+          noun="post"
+        />
       </Frame>
 
       <Frame as="div" className="py-6">
@@ -129,9 +140,15 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
 
       <Divider />
 
+      {/* bandeau « résumer avec une IA » : sa propre rangée, avant le texte */}
+      <Frame as="div" className="py-2">
+        <AiSummary url={`${site.url}/blog/${post.slug}`} title={post.title} />
+      </Frame>
+
       <Frame as="div" className="py-6">
         <article>
-          <RichTextWithToc html={post.contentHtml} />
+          {/* menu des titres h2 (les articles sont structurés en h2) */}
+          <RichTextWithToc html={post.contentHtml} headingLevel={2} />
         </article>
       </Frame>
 
@@ -146,8 +163,8 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         </section>
       )}
 
-      {/* bas d'article (sa propre rangée, ligne du haut pleine largeur) : auteur à gauche,
-          dates de publication et de mise à jour à droite */}
+      {/* bas d'article (sa propre rangée, ligne du haut pleine largeur) : auteur à gauche ; à droite,
+          les liens de partage puis les dates de publication et de mise à jour */}
       <Frame as="div" className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
         {post.author ? (
           <div className="flex items-center gap-3">
@@ -170,21 +187,25 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         ) : (
           <span />
         )}
-        <dl className="grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5 text-xs text-muted">
-          <dt>Published</dt>
-          <dd className="text-foreground">
-            <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-          </dd>
-          {/* mise à jour : seulement si elle tombe un autre jour que la publication */}
-          {updated && (
-            <>
-              <dt>Updated</dt>
-              <dd className="text-foreground">
-                <time dateTime={post.updatedAt}>{updated}</time>
-              </dd>
-            </>
-          )}
-        </dl>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <ShareLinks url={`${site.url}/blog/${post.slug}`} title={post.title} />
+          <span aria-hidden className="h-6 w-px bg-border max-sm:hidden" />
+          <dl className="grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5 text-xs text-muted">
+            <dt>Published</dt>
+            <dd className="text-foreground">
+              <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+            </dd>
+            {/* mise à jour : seulement si elle tombe un autre jour que la publication */}
+            {updated && (
+              <>
+                <dt>Updated</dt>
+                <dd className="text-foreground">
+                  <time dateTime={post.updatedAt}>{updated}</time>
+                </dd>
+              </>
+            )}
+          </dl>
+        </div>
       </Frame>
 
       {more.length > 0 && (

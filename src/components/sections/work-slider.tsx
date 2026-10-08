@@ -9,18 +9,21 @@ import { ProjectCard, placeholderFor } from "@/components/project-card";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/icons";
 
-export function WorkSlider({ projects }: { projects: WorkProject[] }) {
+// `loop` : boucle infinie (accueil). Sans boucle (pages service), le slider s'arrête au premier
+// et au dernier projet, et les flèches se désactivent aux extrémités.
+export function WorkSlider({ projects, loop = true }: { projects: WorkProject[]; loop?: boolean }) {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [current, setCurrent] = useState(0);
+  const [edges, setEdges] = useState({ start: true, end: projects.length <= 1 });
   const count = projects.length;
   // Boucle infinie : Swiper a besoin d'au moins 4 slides pour remplir la vue pendant le
   // bouclage. Avec peu de projets, on répète la liste (la pagination reste par projet).
-  const slides = Array.from({ length: Math.ceil(4 / count) }, () => projects).flat();
+  const slides = loop ? Array.from({ length: Math.ceil(4 / count) }, () => projects).flat() : projects;
 
   return (
     <>
       <Swiper
-        loop
+        loop={loop}
         // transition plus lente et adoucie (début et fin progressifs)
         speed={850}
         spaceBetween={24}
@@ -30,6 +33,8 @@ export function WorkSlider({ projects }: { projects: WorkProject[] }) {
         className="!overflow-visible [&_.swiper-wrapper]:ease-[cubic-bezier(0.65,0,0.35,1)]"
         onSwiper={setSwiper}
         onRealIndexChange={(s) => setCurrent(s.realIndex % count)}
+        onSlideChange={(s) => setEdges({ start: s.isBeginning, end: s.isEnd })}
+        onReachEnd={() => setEdges((e) => ({ ...e, end: true }))}
       >
         {slides.map((project, i) => (
           <SwiperSlide key={i}>
@@ -50,7 +55,7 @@ export function WorkSlider({ projects }: { projects: WorkProject[] }) {
               type="button"
               aria-label={`Go to ${project.name}`}
               aria-current={i === current}
-              onClick={() => swiper?.slideToLoop(i)}
+              onClick={() => (loop ? swiper?.slideToLoop(i) : swiper?.slideTo(i))}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === current ? "w-6 bg-foreground" : "w-1.5 bg-border hover:bg-muted"
               }`}
@@ -58,13 +63,25 @@ export function WorkSlider({ projects }: { projects: WorkProject[] }) {
           ))}
         </div>
 
-        {/* Flèches (jamais désactivées : le slider boucle), de la couleur du fond :
+        {/* Flèches (désactivées aux extrémités quand le slider ne boucle pas), de la couleur du fond :
             les particules viennent les entourer (data-particles) */}
         <div className="flex gap-2" data-particles="work-arrows">
-          <Button size="icon" variant="secondary" aria-label="Previous slide" onClick={() => swiper?.slidePrev()}>
+          <Button
+            size="icon"
+            variant="secondary"
+            aria-label="Previous slide"
+            disabled={!loop && edges.start}
+            onClick={() => swiper?.slidePrev()}
+          >
             <ArrowIcon className="size-4 rotate-180" />
           </Button>
-          <Button size="icon" variant="secondary" aria-label="Next slide" onClick={() => swiper?.slideNext()}>
+          <Button
+            size="icon"
+            variant="secondary"
+            aria-label="Next slide"
+            disabled={!loop && edges.end}
+            onClick={() => swiper?.slideNext()}
+          >
             <ArrowIcon />
           </Button>
         </div>

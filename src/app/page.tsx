@@ -7,6 +7,7 @@ import { About } from "@/components/sections/about";
 import { Stack } from "@/components/sections/stack";
 import { Contact } from "@/components/sections/contact";
 import { Blog } from "@/components/sections/blog";
+import { Services } from "@/components/sections/services";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
       <Divider />
       <Stack />
       <Divider />
+      <Services />
       <Blog />
       <Contact />
       <Divider />

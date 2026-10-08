@@ -1,13 +1,16 @@
 import { slugify } from "@/lib/slugify";
 import type { Heading } from "@/components/table-of-contents";
 
-// Ajoute un id à chaque <h3> du HTML du CMS (ancre pour le menu) et renvoie la liste des titres.
-// Ids uniques : un titre répété reçoit un suffixe (-2, -3…).
-export function withHeadingIds(html: string): { html: string; headings: Heading[] } {
+// Ajoute un id à chaque titre du niveau donné (h3 par défaut) du HTML du CMS (ancre pour le menu)
+// et renvoie la liste des titres. Ids uniques : un titre répété reçoit un suffixe (-2, -3…).
+export function withHeadingIds(html: string, level: 2 | 3 = 3): { html: string; headings: Heading[] } {
   const headings: Heading[] = [];
   const used = new Map<string, number>();
+  const tag = `h${level}`;
 
-  const out = html.replace(/<h3([^>]*)>([\s\S]*?)<\/h3>/g, (match, attrs: string, inner: string) => {
+  const pattern = new RegExp(`<${tag}([^>]*)>([\\s\\S]*?)</${tag}>`, "g");
+
+  const out = html.replace(pattern, (match, attrs: string, inner: string) => {
     const text = decodeEntities(inner.replace(/<[^>]+>/g, "")).trim();
     if (!text || /\sid=/.test(attrs)) return match;
     const base = slugify(text) || "section";
@@ -15,7 +18,7 @@ export function withHeadingIds(html: string): { html: string; headings: Heading[
     used.set(base, count);
     const id = count > 1 ? `${base}-${count}` : base;
     headings.push({ id, text });
-    return `<h3${attrs} id="${id}">${inner}</h3>`;
+    return `<${tag}${attrs} id="${id}">${inner}</${tag}>`;
   });
 
   return { html: out, headings };

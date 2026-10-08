@@ -112,22 +112,25 @@ export function Hero() {
           fait toute la largeur de la page */}
       <Frame as="div" bleed>
         <div className="flex items-center justify-between gap-6 px-6 py-2.5">
-          <ul className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
+          {/* icônes seules (nom en infobulle et pour les lecteurs d'écran) ; nom en texte si pas d'icône */}
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
             {site.links.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-muted transition-colors hover:text-foreground"
+                  aria-label={l.label}
+                  title={l.label}
+                  className="block text-muted transition-colors hover:text-foreground"
                 >
-                  {/* même couleur (currentColor) et même hauteur (1em) que le texte */}
-                  {SOCIAL_ICONS[l.label] && (
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="size-[1em] shrink-0" aria-hidden>
+                  {SOCIAL_ICONS[l.label] ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden>
                       <path d={SOCIAL_ICONS[l.label]} />
                     </svg>
+                  ) : (
+                    l.label
                   )}
-                  {l.label}
                 </a>
               </li>
             ))}

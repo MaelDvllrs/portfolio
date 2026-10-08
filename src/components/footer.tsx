@@ -8,6 +8,7 @@ import { GlowWordmark } from "@/components/ui/glow-wordmark";
 
 const pages = [
   { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
@@ -15,7 +16,7 @@ const pages = [
 
 // Trois rangées (chacune sa ligne haute pleine largeur) :
 // 1. logo à gauche, réseaux (icônes seules) à droite ;
-// 2. nom + description à gauche, liens des pages à droite ;
+// 2. nom + description à gauche, liens des pages à droite (en dessous, alignés à gauche, sur mobile) ;
 // 3. copyright à gauche, choix du thème à droite ;
 // puis « trymael » en très grand, en contour lumineux (lueur sous la souris, effet déclenché par
 // tout le footer). Les rangées passent au-dessus de sa lumière (z-10) et le mot ne capte pas la
@@ -59,7 +60,7 @@ export function Footer() {
           <p className="mt-1 text-muted">{site.profile.bio[0]}</p>
         </div>
         <nav aria-label="Footer">
-          <ul className="flex flex-col items-end gap-2">
+          <ul className="flex flex-col items-start gap-2 sm:items-end">
             {pages.map((p) => (
               <li key={p.href}>
                 <Link href={p.href} className="text-muted transition-colors hover:text-foreground">

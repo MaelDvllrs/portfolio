@@ -1,5 +1,6 @@
 import { site } from "@/content/site";
 import { slugify } from "@/lib/slugify";
+import { ILLUSTRATIONS, type IllustrationKey } from "@/components/service-illustrations";
 
 // Client du CMS Payload (projet séparé `portfolio-cms`, servi sur cms.monsite.fr).
 // Les données sont mises en cache avec un tag ; le CMS appelle /api/revalidate après chaque
@@ -8,7 +9,7 @@ import { slugify } from "@/lib/slugify";
 
 const CMS_URL = process.env.CMS_URL;
 
-export const CMS_TAGS = { projects: "projects", clients: "clients", posts: "posts" } as const;
+export const CMS_TAGS = { projects: "projects", clients: "clients", posts: "posts", services: "services" } as const;
 
 // Forme utilisée par l'interface (indépendante du format de l'API)
 export type WorkProject = {
@@ -171,6 +172,110 @@ export async function getProjects(): Promise<WorkProject[]> {
 export async function getProject(slug: string): Promise<WorkProject | null> {
   const projects = await getProjects();
   return projects.find((p) => p.slug === slug) ?? null;
+}
+
+// --- Services -----------------------------------------------------------------------------
+
+export type Service = {
+  id: string;
+  /** Page du service : /services/<slug> */
+  slug: string;
+  name: string;
+  summary: string;
+  /** Illustration minimaliste choisie dans le CMS (prioritaire sur la couverture), ou null */
+  illustration: IllustrationKey | null;
+  cover: { url: string; alt: string } | null;
+  /** Noms des outils, tels que dans BRANDS (src/components/ui/brands.ts) */
+  tools: string[];
+  /** Points clés (3 cartes titre + texte) de la page du service */
+  highlights: { title: string; text: string }[];
+  /** Section « What can I build » : texte à gauche, visuel (illustration codée) à droite */
+  builds: { title: string; text: string; visual: IllustrationKey }[];
+  /** Ids des projets liés (réalisations du slider de la page), dans l'ordre choisi dans le CMS */
+  projectIds: string[];
+  /** Explication complète en HTML (champ `contentHtml` du CMS), vide si non rédigée */
+  contentHtml: string;
+  faq: { question: string; answer: string }[];
+  /** SEO : valeurs du CMS, sinon nom et résumé */
+  metaTitle: string;
+  metaDescription: string;
+};
+
+// Sous-ensemble du type `Service` généré par Payload (portfolio-cms/src/payload-types.ts)
+type CmsService = {
+  id: number;
+  name: string;
+  slug: string;
+  summary: string;
+  illustration?: string | null;
+  cover?: number | CmsMedia | null;
+  tools?: string[] | null;
+  highlights?: { title: string; text: string }[] | null;
+  builds?: { title: string; text: string; visual: string }[] | null;
+  projects?: (number | { id: number })[] | null;
+  contentHtml?: string | null;
+  faq?: { question: string; answer: string }[] | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+};
+
+function serviceFromCms(service: CmsService): Service {
+  return {
+    id: String(service.id),
+    slug: service.slug,
+    name: service.name,
+    summary: service.summary,
+    // une valeur inconnue (illustration pas encore dessinée côté portfolio) est ignorée
+    illustration:
+      service.illustration && service.illustration in ILLUSTRATIONS
+        ? (service.illustration as IllustrationKey)
+        : null,
+    cover: toMedia(service.cover),
+    tools: service.tools?.map((t) => TOOL_LABELS[t] ?? t) ?? [],
+    highlights: service.highlights?.map(({ title, text }) => ({ title, text })) ?? [],
+    // visuel inconnu (pas encore dessiné côté portfolio) : l'élément est ignoré
+    builds:
+      service.builds
+        ?.filter((b) => b.visual in ILLUSTRATIONS)
+        .map(({ title, text, visual }) => ({ title, text, visual: visual as IllustrationKey })) ?? [],
+    // avec depth=1 les projets arrivent peuplés (objets), sinon ce sont des ids
+    projectIds: service.projects?.map((p) => String(typeof p === "number" ? p : p.id)) ?? [],
+    contentHtml: unwrapRichText(service.contentHtml),
+    faq: service.faq?.map(({ question, answer }) => ({ question, answer })) ?? [],
+    metaTitle: service.metaTitle || service.name,
+    metaDescription: service.metaDescription || service.summary,
+  };
+}
+
+/** Services publiés, triés par `order`. Sans CMS : aucun service. */
+export async function getServices(): Promise<Service[]> {
+  if (!CMS_URL) return [];
+
+  const params = new URLSearchParams({
+    depth: "1", // inclut la couverture
+    sort: "order",
+    limit: "50",
+    "where[_status][equals]": "published",
+  });
+
+  try {
+    const res = await fetch(`${CMS_URL}/api/services?${params}`, {
+      cache: "force-cache",
+      next: { tags: [CMS_TAGS.services] },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data: { docs: CmsService[] } = await res.json();
+    return data.docs.map(serviceFromCms);
+  } catch (error) {
+    console.error("[cms] Impossible de charger les services :", error);
+    return [];
+  }
+}
+
+/** Un service par son slug (page /services/<slug>), ou null s'il n'existe pas / n'est pas publié. */
+export async function getService(slug: string): Promise<Service | null> {
+  const services = await getServices();
+  return services.find((s) => s.slug === slug) ?? null;
 }
 
 // --- Blog ---------------------------------------------------------------------------------

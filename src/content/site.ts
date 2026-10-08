@@ -7,12 +7,15 @@ export const site = {
   name: "Maël Devillers",
   role: "Fullstack Developer · AI · Product",
   email: "mael.devillers@gmail.com",
+  // Dépôt public du portfolio sur GitHub (bouton « Star » du header)
+  repo: "MaelDvllrs/portfolio",
   // URL publique du site (liens canoniques, sitemap, Open Graph) : variable SITE_URL en production
   url: process.env.SITE_URL ?? "http://localhost:3000",
   links: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/mael-devillers-b12a5b236" },
     { label: "GitHub", href: "https://github.com/MaelDvllrs" },
     { label: "X", href: "https://x.com/marl_2304" },
+    { label: "Webflow", href: "https://webflow.com/@maeldvllrs" },
   ],
 
   // En-tête façon profil (src/components/sections/hero.tsx)
@@ -30,6 +33,12 @@ export const site = {
     { name: "Atol", logo: atolLogo },
     { name: "Tech and Fest", logo: techAndFestLogo },
   ],
+
+  // Page /services (hub des services)
+  services: {
+    title: "Services",
+    intro: "What I can build for you: web products, SaaS and AI tools, from the first idea to production.", // TODO : à ajuster
+  },
 
   // Page /contact
   contactPage: {

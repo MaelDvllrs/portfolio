@@ -12,6 +12,7 @@ import { Divider } from "@/components/ui/divider";
 import { ButtonLink } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/icons";
 import { BackLink } from "@/components/ui/back-link";
+import { PrevNext } from "@/components/ui/prev-next";
 import { BRANDS } from "@/components/ui/brands";
 import { Contact } from "@/components/sections/contact";
 
@@ -50,9 +51,15 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
   return (
     // pt-14 : sous le header fixe
     <main className="flex-1 pt-14">
-      {/* retour au hub */}
-      <Frame as="div" className="py-2">
+      {/* retour au hub à gauche ; à droite, flèches vers le projet précédent / suivant */}
+      <Frame as="div" className="flex items-center justify-between gap-4 py-2">
         <BackLink href="/work">All work</BackLink>
+        <PrevNext
+          items={projects.map((p) => ({ slug: p.slug, label: p.name }))}
+          currentSlug={project.slug}
+          basePath="/work"
+          noun="project"
+        />
       </Frame>
 
       <Frame as="div" bleed>

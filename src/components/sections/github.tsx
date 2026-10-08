@@ -57,7 +57,7 @@ export function GitHub() {
         className="text-muted"
         renderBlock={(block, activity) => recolor(block, activity.level)}
         renderColorLegend={(block, level) => recolorLegend(block, level)}
-        labels={{ totalCount: "{{count}} contributions in the last year" }}
+        labels={{ totalCount: "{{count}} contributions in the last year · Source: GitHub" }}
         tooltips={{
           activity: {
             text: (a) => `${a.count} contribution${a.count === 1 ? "" : "s"} on ${a.date}`,
