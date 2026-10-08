@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { ButtonLink } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/icons";
 
@@ -17,9 +18,10 @@ export function PrevNext({
   currentSlug: string;
   /** Chemin des pages, ex. "/blog" → /blog/<slug> */
   basePath: string;
-  /** Nom de l'élément pour les libellés accessibles, ex. "post" */
+  /** Nom de l'élément (déjà traduit) pour les libellés accessibles, ex. "post" / "Article" */
   noun: string;
 }) {
+  const t = useTranslations("Common");
   if (items.length < 2) return null;
   const index = items.findIndex((i) => i.slug === currentSlug);
   const prev = items[(index - 1 + items.length) % items.length];
@@ -31,7 +33,7 @@ export function PrevNext({
         href={`${basePath}/${prev.slug}`}
         variant="secondary"
         size="icon-sm"
-        aria-label={`Previous ${noun}: ${prev.label}`}
+        aria-label={t("previous", { noun, label: prev.label })}
         title={prev.label}
       >
         <ArrowIcon className="size-2.5 rotate-180" />
@@ -40,7 +42,7 @@ export function PrevNext({
         href={`${basePath}/${next.slug}`}
         variant="secondary"
         size="icon-sm"
-        aria-label={`Next ${noun}: ${next.label}`}
+        aria-label={t("next", { noun, label: next.label })}
         title={next.label}
       >
         <ArrowIcon className="size-2.5" />

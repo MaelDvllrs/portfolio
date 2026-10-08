@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localeAlternates } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 import { site } from "@/content/site";
 import { getPosts } from "@/lib/cms";
 import { Frame } from "@/components/frame";
@@ -6,16 +9,22 @@ import { PostRow } from "@/components/post-row";
 import { Divider } from "@/components/ui/divider";
 import { Contact } from "@/components/sections/contact";
 
-export const metadata: Metadata = {
-  title: `Blog — ${site.name}`,
-  description: site.blog.intro,
-  alternates: { canonical: "/blog" },
-};
+export async function generateMetadata({ params }: PageProps<"/[locale]/blog">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Blog" });
+  return {
+    title: `${t("title")} — ${site.name}`,
+    description: t("intro"),
+    alternates: localeAlternates(locale, "/blog"),
+  };
+}
 
 // Liste des articles (CMS, collection `posts`), du plus récent au plus ancien.
-export default async function BlogPage() {
-  const { blog } = site;
-  const posts = await getPosts();
+export default async function BlogPage({ params }: PageProps<"/[locale]/blog">) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const [t, posts] = await Promise.all([getTranslations("Blog"), getPosts(locale as Locale)]);
+  const blog = { title: t("title"), intro: t("intro") };
 
   return (
     // pt-14 : sous le header fixe
@@ -24,7 +33,7 @@ export default async function BlogPage() {
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-lg leading-tight font-bold">{blog.title}</h1>
           <span className="text-sm text-muted">
-            {posts.length} article{posts.length === 1 ? "" : "s"}
+            {t("count", { count: posts.length })}
           </span>
         </div>
         <p className="mt-2 max-w-md text-sm text-muted">{blog.intro}</p>
@@ -42,7 +51,7 @@ export default async function BlogPage() {
             ))}
           </ul>
         ) : (
-          <p className="py-10 text-center text-sm text-muted">First articles coming soon.</p>
+          <p className="py-10 text-center text-sm text-muted">{t("comingSoon")}</p>
         )}
       </Frame>
 

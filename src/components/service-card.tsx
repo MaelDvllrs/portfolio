@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { Service } from "@/lib/cms";
 import { ServiceIllustration } from "@/components/service-illustrations";
 
@@ -12,10 +12,13 @@ export function ServiceCard({
   service,
   className = "aspect-[4/3]",
   showSummary = true,
+  heading: Heading = "h2",
 }: {
   service: Service;
   className?: string;
   showSummary?: boolean;
+  /** Balise du nom : h2 (page /services) ou h3 (sous un titre de section h2 : accueil, autres services) */
+  heading?: "h2" | "h3";
 }) {
   return (
     <Link
@@ -43,7 +46,7 @@ export function ServiceCard({
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background via-background/85 to-transparent" />
 
       <div className="relative mt-auto flex max-w-[85%] flex-col gap-1.5 p-5">
-        <h2 className="text-base leading-snug font-medium tracking-tight">{service.name}</h2>
+        <Heading className="text-base leading-snug font-medium tracking-tight">{service.name}</Heading>
         {showSummary && <p className="line-clamp-3 text-sm text-muted">{service.summary}</p>}
       </div>
     </Link>

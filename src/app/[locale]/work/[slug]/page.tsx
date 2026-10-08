@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localeAlternates } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { site } from "@/content/site";
@@ -18,18 +21,19 @@ import { Contact } from "@/components/sections/contact";
 
 // Pages générées au build pour chaque projet publié ; un slug inconnu est rendu à la demande
 // (projet publié depuis), sinon 404.
-export async function generateStaticParams() {
-  const projects = await getProjects();
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  const projects = await getProjects(params.locale as Locale);
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/work/[slug]">): Promise<Metadata> {
-  const { slug } = await params;
-  const project = await getProject(slug);
+export async function generateMetadata({ params }: PageProps<"/[locale]/work/[slug]">): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const project = await getProject(slug, locale as Locale);
   if (!project) return {};
   return {
     title: `${project.name} — ${site.name}`,
     description: project.description || undefined,
+    alternates: localeAlternates(locale, `/work/${project.slug}`),
     openGraph: project.image ? { images: [project.image.url] } : undefined,
   };
 }
@@ -37,9 +41,11 @@ export async function generateMetadata({ params }: PageProps<"/work/[slug]">): P
 // Page d'un projet, façon profil (comme le hero de l'accueil) : bannière = couverture,
 // logo en « photo de profil », puis nom, type, description, puis outils et période ;
 // ensuite l'étude de cas (contenu du CMS), d'autres projets et le contact.
-export default async function ProjectPage({ params }: PageProps<"/work/[slug]">) {
-  const { slug } = await params;
-  const [project, projects] = await Promise.all([getProject(slug), getProjects()]);
+export default async function ProjectPage({ params }: PageProps<"/[locale]/work/[slug]">) {
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const [t, common] = await Promise.all([getTranslations("Work"), getTranslations("Common")]);
+  const [project, projects] = await Promise.all([getProject(slug, locale as Locale), getProjects(locale as Locale)]);
   if (!project) notFound();
 
   const index = projects.findIndex((p) => p.id === project.id);
@@ -53,12 +59,12 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
     <main className="flex-1 pt-14">
       {/* retour au hub à gauche ; à droite, flèches vers le projet précédent / suivant */}
       <Frame as="div" className="flex items-center justify-between gap-4 py-2">
-        <BackLink href="/work">All work</BackLink>
+        <BackLink href="/work">{t("allWork")}</BackLink>
         <PrevNext
           items={projects.map((p) => ({ slug: p.slug, label: p.name }))}
           currentSlug={project.slug}
           basePath="/work"
-          noun="project"
+          noun={t("noun")}
         />
       </Frame>
 
@@ -108,7 +114,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
                 size="sm"
                 className="shrink-0"
               >
-                Visit
+                {t("visit")}
                 <ArrowIcon className="size-3.5 -rotate-45" />
               </ButtonLink>
             )}
@@ -143,7 +149,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
       {/* explication complète, juste sous les outils : texte riche du champ `content` du CMS
           (converti en HTML par le CMS : champ contentHtml, contenu de confiance) */}
       {project.contentHtml && (
-        <Section id="overview" title="Overview">
+        <Section id="overview" title={t("overview")}>
           <RichTextWithToc html={project.contentHtml} />
         </Section>
       )}
@@ -152,12 +158,12 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
 
       {more.length > 0 && (
         <section id="more-work" className="scroll-mt-20">
-          <SectionTitle action={{ label: "View all", href: "/work" }}>More work</SectionTitle>
+          <SectionTitle action={{ label: common("viewAll"), href: "/work" }}>{t("moreWork")}</SectionTitle>
           <Frame as="div" className="py-6">
             <ul className="grid gap-6 sm:grid-cols-2">
               {more.map((p) => (
                 <li key={p.id}>
-                  <WorkHubCard project={p} placeholder={placeholderFor(projects.indexOf(p))} />
+                  <WorkHubCard project={p} heading="h3" placeholder={placeholderFor(projects.indexOf(p))} />
                 </li>
               ))}
             </ul>

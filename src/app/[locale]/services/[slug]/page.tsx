@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localeAlternates, localizedPaths } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
+import { permanentRedirect } from "@/i18n/navigation";
+import { LocaleAlternates } from "@/components/locale-alternates";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { site } from "@/content/site";
-import { getProjects, getService, getServices } from "@/lib/cms";
+import { findSlugInOtherLocales, getProjects, getService, getServices, getSlugsById } from "@/lib/cms";
 import { Frame } from "@/components/frame";
 import { Section, SectionTitle } from "@/components/section";
 import { RichTextWithToc } from "@/components/rich-text-with-toc";
@@ -22,19 +27,20 @@ import { Contact } from "@/components/sections/contact";
 
 // Pages générées au build pour chaque service publié ; un slug inconnu est rendu à la demande
 // (service publié depuis), sinon 404.
-export async function generateStaticParams() {
-  const services = await getServices();
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  const services = await getServices(params.locale as Locale);
   return services.map((s) => ({ slug: s.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/services/[slug]">): Promise<Metadata> {
-  const { slug } = await params;
-  const service = await getService(slug);
+export async function generateMetadata({ params }: PageProps<"/[locale]/services/[slug]">): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const service = await getService(slug, locale as Locale);
   if (!service) return {};
+  const paths = localizedPaths("/services", await getSlugsById("services", service.id));
   return {
     title: service.metaTitle,
     description: service.metaDescription,
-    alternates: { canonical: `/services/${service.slug}` },
+    alternates: localeAlternates(locale, paths),
     openGraph: {
       title: service.metaTitle,
       description: service.metaDescription,
@@ -46,10 +52,19 @@ export async function generateMetadata({ params }: PageProps<"/services/[slug]">
 // Page d'un service : retour au hub, hero (illustration ou couverture en fond, nom, résumé et
 // bouton de contact par-dessus avec un fondu), outils, logos clients, points clés, « What can I build »,
 // réalisations liées (slider), explication complète avec le menu des h3, FAQ, autres services puis le contact.
-export default async function ServicePage({ params }: PageProps<"/services/[slug]">) {
-  const { slug } = await params;
-  const [service, services, projects] = await Promise.all([getService(slug), getServices(), getProjects()]);
-  if (!service) notFound();
+export default async function ServicePage({ params }: PageProps<"/[locale]/services/[slug]">) {
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const [t, common] = await Promise.all([getTranslations("Services"), getTranslations("Common")]);
+  const l = locale as Locale;
+  const [service, services, projects] = await Promise.all([getService(slug, l), getServices(l), getProjects(l)]);
+  if (!service) {
+    // slug d'une autre langue (ex. ancien lien, changement de langue) → bonne URL dans cette langue (308)
+    const other = await findSlugInOtherLocales("services", slug, l);
+    if (other) permanentRedirect({ href: `/services/${other}`, locale });
+    notFound();
+  }
+  const paths = localizedPaths("/services", await getSlugsById("services", service.id));
 
   // réalisations liées au service, dans l'ordre choisi dans le CMS (projets publiés seulement)
   const related = service.projectIds.flatMap((id) => projects.find((p) => p.id === id) ?? []);
@@ -67,13 +82,14 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
     name: service.name,
     description: service.metaDescription,
     image: service.cover?.url,
-    url: `${site.url}/services/${service.slug}`,
+    url: `${site.url}/${locale}/services/${service.slug}`,
     provider: { "@type": "Person", name: site.name, url: site.url },
   };
 
   return (
     // pt-14 : sous le header fixe
     <main className="flex-1 pt-14">
+      <LocaleAlternates paths={paths} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -91,12 +107,12 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
 
       {/* retour au hub à gauche ; à droite, flèches vers le service précédent / suivant */}
       <Frame as="div" className="flex items-center justify-between gap-4 py-2">
-        <BackLink href="/services">All services</BackLink>
+        <BackLink href="/services">{t("allServices")}</BackLink>
         <PrevNext
           items={services.map((s) => ({ slug: s.slug, label: s.name }))}
           currentSlug={service.slug}
           basePath="/services"
-          noun="service"
+          noun={t("noun")}
         />
       </Frame>
 
@@ -133,7 +149,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
               <p className="mt-2 text-sm text-muted">{service.summary}</p>
             </div>
             <ButtonLink href="/contact" variant="primary" size="sm" className="shrink-0 self-start sm:self-auto">
-              Start a project
+              {t("startProject")}
               <ArrowIcon className="size-3.5" />
             </ButtonLink>
           </div>
@@ -187,7 +203,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         <>
           <Divider />
           <section id="what-can-i-build" className="scroll-mt-20">
-            <SectionTitle>What can I build</SectionTitle>
+            <SectionTitle>{t("whatCanIBuild")}</SectionTitle>
             <Frame as="div" bleed>
               <WhatCanIBuild items={service.builds} />
             </Frame>
@@ -202,8 +218,8 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           <Divider />
           <Section
             id="related-work"
-            title="Related work"
-            action={{ label: "View all", href: "/work" }}
+            title={t("relatedWork")}
+            action={{ label: common("viewAll"), href: "/work" }}
             className="overflow-hidden"
           >
             <WorkSlider projects={related} loop={false} />
@@ -227,7 +243,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
       {/* FAQ du service (questions remplies dans le CMS) */}
       {service.faq.length > 0 && (
         <section id="faq" className="scroll-mt-20">
-          <SectionTitle>Frequently asked questions</SectionTitle>
+          <SectionTitle>{common("faq")}</SectionTitle>
           {/* bleed : lignes de la FAQ d'une bordure à l'autre, sans padding de section */}
           <Frame as="div" bleed>
             <Faq items={service.faq} />
@@ -239,12 +255,12 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         <>
           <Divider />
           <section id="more-services" className="scroll-mt-20">
-            <SectionTitle action={{ label: "View all", href: "/services" }}>More services</SectionTitle>
+            <SectionTitle action={{ label: common("viewAll"), href: "/services" }}>{t("moreServices")}</SectionTitle>
             <Frame as="div" className="py-6">
               <ul className="grid gap-6 sm:grid-cols-2">
                 {more.map((s) => (
                   <li key={s.id}>
-                    <ServiceCard service={s} showSummary={false} />
+                    <ServiceCard service={s} heading="h3" showSummary={false} />
                   </li>
                 ))}
               </ul>

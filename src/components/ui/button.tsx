@@ -1,3 +1,5 @@
+import { Link } from "@/i18n/navigation";
+
 const base =
   "inline-flex items-center justify-center gap-2 font-medium transition-colors disabled:pointer-events-none disabled:opacity-40";
 
@@ -32,13 +34,17 @@ type ButtonStyle = { variant?: keyof typeof variants; size?: keyof typeof sizes 
 const classes = ({ variant = "primary", size = "default" }: ButtonStyle, className = "") =>
   `${base} ${variants[variant]} ${sizes[size]} ${className}`;
 
+// Lien interne (« /… ») : lien next-intl, qui garde la langue courante ; sinon (https:, mailto:…) <a>
 export function ButtonLink({
   variant = "brand",
   size,
   className,
+  href = "",
   ...props
 }: React.ComponentProps<"a"> & ButtonStyle) {
-  return <a className={classes({ variant, size }, className)} {...props} />;
+  const cls = classes({ variant, size }, className);
+  if (href.startsWith("/")) return <Link href={href} className={cls} {...props} />;
+  return <a href={href} className={cls} {...props} />;
 }
 
 export function Button({

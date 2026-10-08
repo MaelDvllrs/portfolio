@@ -1,4 +1,4 @@
-import { site } from "@/content/site";
+import { useTranslations } from "next-intl";
 import { Frame } from "@/components/frame";
 import { SectionTitle } from "@/components/section";
 import { BRANDS } from "@/components/ui/brands";
@@ -16,7 +16,13 @@ function Logo({ path, className }: { path: string; className?: string }) {
 }
 
 export function Stack() {
-  const { stack } = site;
+  const t = useTranslations("Stack");
+  // outils dans l'ordre des messages ; `name` = clé de BRANDS (liste, et non objet : les noms
+  // comme « Next.js » contiennent un point, interdit dans les clés de next-intl)
+  const stack = {
+    title: t("title"),
+    tools: t.raw("tools") as { name: string; description: string }[],
+  };
   return (
     <section id="stack" className="scroll-mt-20">
       <SectionTitle>{stack.title}</SectionTitle>

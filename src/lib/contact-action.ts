@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { getTranslations } from "next-intl/server";
 import { site } from "@/content/site";
 
 // Envoi du formulaire de contact : validation, anti-spam, puis email via Resend.
@@ -24,6 +25,8 @@ const escapeHtml = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export async function sendMessage(_prev: ContactState, formData: FormData): Promise<ContactState> {
+  // messages dans la langue de la page d'où le formulaire est envoyé (/en/contact ou /fr/contact)
+  const t = await getTranslations("ContactForm");
   const values = {
     name: String(formData.get("name") ?? "").trim(),
     email: String(formData.get("email") ?? "").trim(),
@@ -32,16 +35,16 @@ export async function sendMessage(_prev: ContactState, formData: FormData): Prom
 
   // Pot de miel : champ invisible pour un humain ; s'il est rempli, c'est un robot.
   // On répond « envoyé » sans rien envoyer, pour ne pas lui donner d'indice.
-  if (formData.get("website")) return { status: "success", message: "Thanks! Your message has been sent." };
+  if (formData.get("website")) return { status: "success", message: t("success") };
 
   const errors: ContactState["errors"] = {};
-  if (!values.name) errors.name = "Please enter your name.";
-  else if (values.name.length > 120) errors.name = "Name is too long.";
-  if (!EMAIL.test(values.email)) errors.email = "Please enter a valid email.";
-  if (values.message.length < 10) errors.message = "Your message is a bit short.";
-  else if (values.message.length > 5000) errors.message = "Your message is too long (5000 characters max).";
+  if (!values.name) errors.name = t("errors.name");
+  else if (values.name.length > 120) errors.name = t("errors.nameLong");
+  if (!EMAIL.test(values.email)) errors.email = t("errors.email");
+  if (values.message.length < 10) errors.message = t("errors.messageShort");
+  else if (values.message.length > 5000) errors.message = t("errors.messageLong");
   if (Object.keys(errors).length) {
-    return { status: "error", message: "Please check the highlighted fields.", errors, values };
+    return { status: "error", message: t("errors.check"), errors, values };
   }
 
   try {
@@ -52,7 +55,7 @@ export async function sendMessage(_prev: ContactState, formData: FormData): Prom
       from: process.env.CONTACT_FROM ?? "Portfolio <onboarding@resend.dev>",
       to: process.env.CONTACT_TO ?? site.email,
       replyTo: values.email,
-      subject: `New message from ${values.name}`,
+      subject: t("emailSubject", { name: values.name }),
       text: `${values.name} <${values.email}>\n\n${values.message}`,
       html:
         `<p><strong>${escapeHtml(values.name)}</strong> &lt;${escapeHtml(values.email)}&gt;</p>` +
@@ -63,10 +66,10 @@ export async function sendMessage(_prev: ContactState, formData: FormData): Prom
     console.error("[contact] Envoi du message impossible :", error);
     return {
       status: "error",
-      message: "Something went wrong. Please try again, or email me directly.",
+      message: t("errors.failed"),
       values,
     };
   }
 
-  return { status: "success", message: "Thanks! Your message has been sent. I'll get back to you soon." };
+  return { status: "success", message: t("success") };
 }

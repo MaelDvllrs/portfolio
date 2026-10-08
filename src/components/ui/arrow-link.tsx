@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowIcon } from "@/components/ui/icons";
 
 // Bouton texte : au repos, juste le texte ; au survol, le texte glisse un peu vers la gauche et

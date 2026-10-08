@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
-import { sendMessage, type ContactState } from "@/app/contact/actions";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { sendMessage, type ContactState } from "@/lib/contact-action";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/icons";
 
@@ -14,6 +16,7 @@ const fieldClass =
 // erreurs par champ et message de confirmation. Après un envoi réussi, le formulaire est
 // remplacé par la confirmation.
 export function ContactForm() {
+  const t = useTranslations("ContactForm");
   const [state, formAction, pending] = useActionState(sendMessage, initialState);
 
   if (state.status === "success") {
@@ -28,7 +31,7 @@ export function ContactForm() {
     // key : remet les valeurs renvoyées par le serveur dans les champs après une erreur
     <form key={JSON.stringify(state.values ?? {})} action={formAction} noValidate className="flex flex-col gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Name" name="name" error={state.errors?.name}>
+        <Field label={t("name")} name="name" error={state.errors?.name}>
           <input
             id="name"
             name="name"
@@ -41,7 +44,7 @@ export function ContactForm() {
             className={fieldClass}
           />
         </Field>
-        <Field label="Email" name="email" error={state.errors?.email}>
+        <Field label={t("email")} name="email" error={state.errors?.email}>
           <input
             id="email"
             name="email"
@@ -56,14 +59,14 @@ export function ContactForm() {
         </Field>
       </div>
 
-      <Field label="Message" name="message" error={state.errors?.message}>
+      <Field label={t("message")} name="message" error={state.errors?.message}>
         <textarea
           id="message"
           name="message"
           rows={6}
           required
           maxLength={5000}
-          placeholder="Tell me about your project…"
+          placeholder={t("placeholder")}
           defaultValue={state.values?.message}
           aria-invalid={Boolean(state.errors?.message)}
           aria-describedby={state.errors?.message ? "message-error" : undefined}
@@ -73,7 +76,7 @@ export function ContactForm() {
 
       {/* pot de miel anti-spam : caché aux humains (et aux lecteurs d'écran), rempli par les robots */}
       <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
-        <label htmlFor="website">Website</label>
+        <label htmlFor="website">{t("website")}</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
 
@@ -82,10 +85,21 @@ export function ContactForm() {
           {state.status === "error" ? state.message : ""}
         </p>
         <Button type="submit" variant="primary" disabled={pending} className="ml-auto">
-          {pending ? "Sending…" : "Send message"}
+          {pending ? t("sending") : t("send")}
           {!pending && <ArrowIcon />}
         </Button>
       </div>
+
+      {/* information RGPD au point de collecte */}
+      <p className="text-xs text-muted">
+        {t.rich("privacy", {
+          link: (chunks) => (
+            <Link href="/privacy-policy" className="underline decoration-border underline-offset-4 hover:text-foreground">
+              {chunks}
+            </Link>
+          ),
+        })}
+      </p>
     </form>
   );
 }

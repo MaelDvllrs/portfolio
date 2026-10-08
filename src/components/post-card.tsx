@@ -1,11 +1,13 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { BlogPost } from "@/lib/cms";
 import { formatDate } from "@/lib/format";
 
 // Carte d'article (section Blog de l'accueil) : image 16/9 en haut, puis date, titre, résumé et
 // tags. Même style que les cartes de /work (padding commun, lueur en bas au survol).
 export function PostCard({ post }: { post: BlogPost }) {
+  const locale = useLocale();
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -25,7 +27,7 @@ export function PostCard({ post }: { post: BlogPost }) {
 
       <div className="relative flex flex-1 flex-col gap-2">
         <time dateTime={post.publishedAt} className="text-xs text-muted">
-          {formatDate(post.publishedAt)}
+          {formatDate(post.publishedAt, locale)}
         </time>
         <h3 className="text-base leading-snug font-medium tracking-tight">{post.title}</h3>
         <p className="line-clamp-2 text-sm text-muted">{post.excerpt}</p>

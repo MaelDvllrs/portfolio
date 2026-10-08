@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export type Heading = { id: string; text: string };
 
@@ -9,6 +10,7 @@ export type Heading = { id: string; text: string };
 // Les liens sont des ancres : Lenis (smooth-scroll.tsx) anime le défilement et respecte le
 // scroll-margin-top des titres (globals.css), qui laisse la place du header fixe.
 export function TableOfContents({ headings }: { headings: Heading[] }) {
+  const t = useTranslations("Common");
   const [active, setActive] = useState(headings[0]?.id);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export function TableOfContents({ headings }: { headings: Heading[] }) {
   }, [headings]);
 
   return (
-    <nav aria-label="On this page" className="sticky top-20">
+    <nav aria-label={t("onThisPage")} className="sticky top-20">
       <ul className="flex flex-col gap-2 border-l border-border text-sm">
         {headings.map((h) => (
           <li key={h.id}>

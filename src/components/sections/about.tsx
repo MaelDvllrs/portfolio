@@ -1,4 +1,4 @@
-import { site } from "@/content/site";
+import { useTranslations } from "next-intl";
 import { Frame } from "@/components/frame";
 import { SectionTitle } from "@/components/section";
 import { GlowLogo } from "@/components/ui/glow-logo";
@@ -6,7 +6,13 @@ import { GlowLogo } from "@/components/ui/glow-logo";
 // Titre en haut (bande pleine largeur) ; puis sous-titre + texte à gauche et le logo (contour) plus large à droite ;
 // puis les chiffres sur une ligne.
 export function About() {
-  const { about } = site;
+  const t = useTranslations("About");
+  const about = {
+    title: t("title"),
+    subtitle: t("subtitle"),
+    paragraphs: t.raw("paragraphs") as string[],
+    stats: t.raw("stats") as { value: string; label: string }[],
+  };
   return (
     <section id="about" className="scroll-mt-20">
       <SectionTitle>{about.title}</SectionTitle>

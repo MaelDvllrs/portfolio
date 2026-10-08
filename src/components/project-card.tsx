@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { WorkProject } from "@/lib/cms";
 
 // Fonds de remplacement tant que les projets n'ont pas d'image

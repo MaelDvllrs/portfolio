@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import type { WorkProject } from "@/lib/cms";
 import { Frame } from "@/components/frame";
 import { placeholderFor } from "@/components/project-card";
@@ -13,6 +14,7 @@ import { Divider } from "@/components/ui/divider";
 // Dans un filtre, les choix s'additionnent (OU) ; entre les deux filtres, ils se combinent (ET).
 // Les options ne listent que les types et outils présents dans les projets.
 export function WorkHub({ projects }: { projects: WorkProject[] }) {
+  const t = useTranslations("Work");
   const [types, setTypes] = useState<string[]>([]);
   const [tools, setTools] = useState<string[]>([]);
 
@@ -36,8 +38,8 @@ export function WorkHub({ projects }: { projects: WorkProject[] }) {
     <>
       <Divider />
       <Frame as="div" className="flex flex-wrap items-center gap-2 py-3">
-        {typeOptions.length > 0 && <MultiSelect label="Type" options={typeOptions} selected={types} onChange={setTypes} />}
-        {toolOptions.length > 0 && <MultiSelect label="Tools" options={toolOptions} selected={tools} onChange={setTools} />}
+        {typeOptions.length > 0 && <MultiSelect label={t("filterType")} options={typeOptions} selected={types} onChange={setTypes} />}
+        {toolOptions.length > 0 && <MultiSelect label={t("filterTools")} options={toolOptions} selected={tools} onChange={setTools} />}
         {active && (
           <button
             type="button"
@@ -47,11 +49,11 @@ export function WorkHub({ projects }: { projects: WorkProject[] }) {
             }}
             className="px-1 text-sm text-muted transition-colors hover:text-foreground"
           >
-            Clear
+            {t("clear")}
           </button>
         )}
         <span className="ml-auto text-sm text-muted">
-          {filtered.length} project{filtered.length === 1 ? "" : "s"}
+          {t("count", { count: filtered.length })}
         </span>
       </Frame>
 
@@ -73,7 +75,7 @@ export function WorkHub({ projects }: { projects: WorkProject[] }) {
             ))}
           </ul>
         ) : (
-          <p className="py-10 text-center text-sm text-muted">No project matches these filters.</p>
+          <p className="py-10 text-center text-sm text-muted">{t("noMatch")}</p>
         )}
       </Frame>
     </>

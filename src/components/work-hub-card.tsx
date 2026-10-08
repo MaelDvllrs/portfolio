@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { WorkProject } from "@/lib/cms";
 import { BRANDS } from "@/components/ui/brands";
 
@@ -10,6 +10,7 @@ export function WorkHubCard({
   placeholder,
   sizes = "(min-width: 50rem) 21rem, 85vw",
   coverClassName = "aspect-video",
+  heading: Heading = "h2",
 }: {
   project: WorkProject;
   placeholder: string;
@@ -17,6 +18,8 @@ export function WorkHubCard({
   sizes?: string;
   /** Format de la couverture ; défaut 16/9 */
   coverClassName?: string;
+  /** Balise du nom : h2 (page /work) ou h3 (« More work », sous un titre de section h2) */
+  heading?: "h2" | "h3";
 }) {
   return (
     <Link
@@ -51,7 +54,7 @@ export function WorkHubCard({
 
       <div className="relative flex flex-1 flex-col gap-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="text-base font-medium tracking-tight">{project.name}</h2>
+          <Heading className="text-base font-medium tracking-tight">{project.name}</Heading>
           {project.type && <span className="shrink-0 text-xs text-muted">{project.type}</span>}
         </div>
 

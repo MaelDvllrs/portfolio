@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+// next-intl : charge la configuration de langue de src/i18n/request.ts
+const withNextIntl = createNextIntlPlugin();
 
 // Domaines d'où next/image peut charger des images :
 // - Supabase Storage (médias du CMS, bucket public) ;
@@ -22,4 +26,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

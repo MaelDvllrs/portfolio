@@ -1,14 +1,16 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
 import { MonitorIcon, MoonIcon, SunIcon } from "@/components/ui/icons";
 
 type Theme = "light" | "dark" | "system";
 
+// libellés traduits (messages Theme.light / dark / system)
 const OPTIONS = [
-  { value: "light", label: "Light", Icon: SunIcon },
-  { value: "dark", label: "Dark", Icon: MoonIcon },
-  { value: "system", label: "System", Icon: MonitorIcon },
+  { value: "light", Icon: SunIcon },
+  { value: "dark", Icon: MoonIcon },
+  { value: "system", Icon: MonitorIcon },
 ] as const;
 
 // Le choix est stocké dans localStorage ("light" | "dark" ; absent = system) et appliqué via
@@ -46,17 +48,18 @@ function subscribe(callback: () => void) {
 export function ThemeSwitch() {
   // côté serveur on ne connaît pas le choix : "system" par défaut, corrigé à l'hydratation
   const theme = useSyncExternalStore(subscribe, readTheme, () => "system" as Theme);
+  const t = useTranslations("Theme");
 
   return (
-    <div role="radiogroup" aria-label="Theme" className="inline-flex rounded-lg border border-border p-0.5">
-      {OPTIONS.map(({ value, label, Icon }) => (
+    <div role="radiogroup" aria-label={t("label")} className="inline-flex rounded-lg border border-border p-0.5">
+      {OPTIONS.map(({ value, Icon }) => (
         <button
           key={value}
           type="button"
           role="radio"
           aria-checked={theme === value}
-          aria-label={label}
-          title={label}
+          aria-label={t(value)}
+          title={t(value)}
           onClick={() => setTheme(value)}
           className={`flex size-6 items-center justify-center rounded-md transition-colors ${
             theme === value ? "bg-surface text-foreground" : "text-muted hover:text-foreground"

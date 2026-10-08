@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { siWebflow } from "simple-icons";
 import { site } from "@/content/site";
 import { Frame } from "@/components/frame";
@@ -11,9 +12,10 @@ import avatar from "@/assets/image/profile.jpg";
 
 // Badges à droite du nom. Logos en currentColor pour suivre le thème
 // (Wenoble : tracés de src/assets/image/logo-wenoble.svg, blanc à l'origine).
+// `key` : libellé traduit (messages Hero.badgeCto / badgeWebflow)
 const badges = [
   {
-    label: "CTO & Co-founder Wenoble",
+    key: "badgeCto",
     viewBox: "0 0 420 289",
     paths: [
       "M0 288.082H39.3089L99.442 0.453125H59.8993L0 288.082Z",
@@ -21,13 +23,16 @@ const badges = [
       "M290.374 0.666016L228.603 287.852L358.229 288.517L420 1.33029L290.374 0.666016Z",
     ],
   },
-  { label: "Webflow Certified Partner", viewBox: "0 0 24 24", paths: [siWebflow.path] },
+  { key: "badgeWebflow", viewBox: "0 0 24 24", paths: [siWebflow.path] },
 ];
 
 // En-tête façon profil de réseau social : bannière pleine largeur de la colonne,
 // photo ronde qui déborde sur le bas de la bannière, puis nom, pseudo, bio et liens.
 export function Hero() {
   const { profile } = site;
+  const t = useTranslations("Hero");
+  const common = useTranslations("Common");
+  const nav = useTranslations("Nav");
 
   return (
     <section id="hero">
@@ -64,41 +69,46 @@ export function Hero() {
           {/* nom et pseudo à gauche ; rôle chez Wenoble et badge partenaire Webflow tout à droite, aligné sur le nom */}
           <div className="mt-6 flex items-start justify-between gap-4">
             <div>
-              <h1 className="flex items-center gap-1 text-lg leading-tight font-bold">
+              {/* nom en paragraphe : le titre principal (h1) de la page est la description */}
+              <p className="flex items-center gap-1 text-lg leading-tight font-bold">
                 {profile.name}
                 {/* pin « certifié » façon compte vérifié (icône Material « verified », coche évidée) */}
-                <svg viewBox="0 0 24 24" fill="currentColor" className="size-[1.1em] text-foreground" role="img" aria-label="Verified">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="size-[1.1em] text-foreground" role="img" aria-label={common("verified")}>
                   <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" />
                 </svg>
-              </h1>
+              </p>
               <p className="text-sm text-muted">{profile.handle}</p>
             </div>
             {/* grille logo | texte : les deux logos restent alignés en colonne */}
             <ul className="grid shrink-0 grid-cols-[1rem_auto] items-center gap-x-2 gap-y-1.5 pt-0.5 text-xs font-medium">
               {badges.map((b) => (
-                <li key={b.label} className="contents">
+                <li key={b.key} className="contents">
                   <svg viewBox={b.viewBox} fill="currentColor" className="size-4" aria-hidden>
                     {b.paths.map((d) => (
                       <path key={d} d={d} />
                     ))}
                   </svg>
-                  <span>{b.label}</span>
+                  <span>{t(b.key)}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="mt-4 text-sm leading-snug text-pretty sm:max-w-[40%]">
-            {profile.bio.map((line) => (
-              <p key={line}>{line}</p>
+          {/* description = titre principal de la page (h1, pour le SEO), même style qu'un texte courant ;
+              une ligne de la bio par ligne affichée */}
+          <h1 className="mt-4 text-sm leading-snug font-normal text-pretty sm:max-w-[40%]">
+            {(t.raw("bio") as string[]).map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
             ))}
-          </div>
+          </h1>
 
           {/* localisation et heure locale (en direct) */}
           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted">
             <span className="flex items-center gap-1.5">
               <PinIcon className="size-[1em]" />
-              {profile.location}
+              {t("location")}
             </span>
             <span className="flex items-center gap-1.5">
               <ClockIcon className="size-[1em]" />
@@ -136,7 +146,7 @@ export function Hero() {
             ))}
           </ul>
           {/* vers la page de contact (formulaire) */}
-          <ArrowLink href="/contact">Contact</ArrowLink>
+          <ArrowLink href="/contact">{nav("contact")}</ArrowLink>
         </div>
       </Frame>
     </section>

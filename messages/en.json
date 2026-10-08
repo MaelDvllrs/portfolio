@@ -1,0 +1,274 @@
+{
+  "Metadata": {
+    "title": "Maël Devillers — Fullstack Developer",
+    "description": "Fullstack developer building web products, SaaS and AI-powered experiences from idea to production.",
+    "workTitle": "Work",
+    "servicesTitle": "Services",
+    "blogTitle": "Blog",
+    "contactTitle": "Contact"
+  },
+  "Nav": {
+    "services": "Services",
+    "work": "Work",
+    "blog": "Blog",
+    "contact": "Contact",
+    "home": "Home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "mobile": "Mobile",
+    "footer": "Footer",
+    "language": "Language",
+    "githubStar": "Star {repo} on GitHub",
+    "githubStars": "{count, plural, one {# star} other {# stars}}"
+  },
+  "Common": {
+    "viewAll": "View all",
+    "previous": "Previous {noun}: {label}",
+    "next": "Next {noun}: {label}",
+    "onThisPage": "On this page",
+    "faq": "Frequently asked questions",
+    "verified": "Verified"
+  },
+  "Hero": {
+    "bio": [
+      "Fullstack developer building web products, SaaS and AI-powered experiences from idea to production."
+    ],
+    "location": "Paris, France",
+    "badgeCto": "CTO & Co-founder Wenoble",
+    "badgeWebflow": "Webflow Certified Partner"
+  },
+  "Home": {
+    "selectedWork": "Selected work",
+    "services": "Services",
+    "blog": "Blog",
+    "clients": "Clients",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
+  },
+  "About": {
+    "title": "Developer, builder, entrepreneur.",
+    "subtitle": "Building products, end to end.",
+    "paragraphs": [
+      "I'm Maël, a French fullstack developer and co-founder of Wenoble.",
+      "I design and build web products, from the first idea to production.",
+      "My focus sits at the intersection of product, engineering and AI."
+    ],
+    "stats": [
+      {
+        "value": "4+",
+        "label": "Years of web development"
+      },
+      {
+        "value": "50+",
+        "label": "Projects / clients"
+      },
+      {
+        "value": "3",
+        "label": "Products built"
+      },
+      {
+        "value": "∞",
+        "label": "Things still to build"
+      }
+    ]
+  },
+  "GitHub": {
+    "title": "Contributions",
+    "totalCount": "{count} contributions in the last year · Source: GitHub",
+    "tooltip": "{count, plural, one {# contribution} other {# contributions}} on {date}",
+    "months": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "less": "Less",
+    "more": "More"
+  },
+  "Stack": {
+    "title": "Tools I like to build with.",
+    "tools": [
+      {
+        "name": "React",
+        "description": "My go-to UI library. Component-driven interfaces, from dashboards to marketing sites."
+      },
+      {
+        "name": "Next.js",
+        "description": "The framework behind most of my products: routing, server rendering and APIs in one place."
+      },
+      {
+        "name": "TypeScript",
+        "description": "Types everywhere, front to back. Fewer bugs, safer refactors, faster onboarding."
+      },
+      {
+        "name": "Tailwind CSS",
+        "description": "Utility-first styling to design directly in the code and keep UIs consistent."
+      },
+      {
+        "name": "Webflow",
+        "description": "Visual development for marketing sites that teams can edit themselves, without a developer."
+      },
+      {
+        "name": "Node.js",
+        "description": "JavaScript on the server for APIs, workers, scripts and integrations."
+      },
+      {
+        "name": "Express",
+        "description": "Minimal Node.js server for lightweight APIs, webhooks and quick prototypes."
+      },
+      {
+        "name": "NestJS",
+        "description": "Structured backends for larger APIs: modules, dependency injection, clean architecture."
+      },
+      {
+        "name": "PostgreSQL",
+        "description": "The database I trust: relational, reliable, and powerful with JSONB and extensions."
+      },
+      {
+        "name": "MongoDB",
+        "description": "Document database when the data is flexible, nested or changes shape often."
+      },
+      {
+        "name": "Supabase",
+        "description": "Postgres with auth, storage and realtime built in. Perfect to ship an MVP fast."
+      },
+      {
+        "name": "Claude",
+        "description": "My main LLM for agents, RAG pipelines and AI features shipped to production."
+      },
+      {
+        "name": "OpenAI",
+        "description": "GPT models and embeddings for generation, classification and semantic search."
+      },
+      {
+        "name": "MCP",
+        "description": "Model Context Protocol: connecting LLMs to real tools, APIs and data sources."
+      },
+      {
+        "name": "Vercel",
+        "description": "Zero-config deployments, preview URLs on every branch, edge network by default."
+      },
+      {
+        "name": "Cloudflare",
+        "description": "DNS, CDN, security and edge workers in front of everything I put online."
+      },
+      {
+        "name": "Docker",
+        "description": "Reproducible environments, from local development to production containers."
+      },
+      {
+        "name": "GitHub",
+        "description": "Repositories, pull requests, Actions for CI/CD and issues to run the project."
+      }
+    ]
+  },
+  "ContactSection": {
+    "title": "Let's build it.",
+    "cta": "Get in touch"
+  },
+  "Work": {
+    "title": "Work",
+    "intro": "Products, SaaS and AI tools I designed and built, from idea to production.",
+    "count": "{count, plural, one {# project} other {# projects}}",
+    "filterType": "Type",
+    "filterTools": "Tools",
+    "clear": "Clear",
+    "noMatch": "No project matches these filters.",
+    "allWork": "All work",
+    "noun": "project",
+    "overview": "Overview",
+    "moreWork": "More work",
+    "visit": "Visit",
+    "now": "now"
+  },
+  "Services": {
+    "title": "Services",
+    "intro": "What I can build for you: web products, SaaS and AI tools, from the first idea to production.",
+    "count": "{count, plural, one {# service} other {# services}}",
+    "comingSoon": "Services coming soon.",
+    "allServices": "All services",
+    "noun": "service",
+    "whatCanIBuild": "What can I build",
+    "relatedWork": "Related work",
+    "moreServices": "More services",
+    "startProject": "Start a project"
+  },
+  "Blog": {
+    "title": "Blog",
+    "intro": "Notes on building web products, SaaS and AI tools: what worked, what didn't.",
+    "count": "{count, plural, one {# article} other {# articles}}",
+    "comingSoon": "First articles coming soon.",
+    "allPosts": "All posts",
+    "noun": "post",
+    "minRead": "{minutes} min read",
+    "published": "Published",
+    "updated": "Updated",
+    "morePosts": "More posts",
+    "share": "Share",
+    "shareOn": "Share on {network}",
+    "summarize": "Summarize this article with AI",
+    "summarizeWith": "Summarize with {assistant}",
+    "aiPrompt": "Summarize the key points of the article \"{title}\" by {author}, then tell me what I should remember from it: {url}"
+  },
+  "ContactPage": {
+    "title": "Contact",
+    "intro": "A project, a question or just want to say hi? Send me a message and I'll get back to you within 48 hours.",
+    "formTitle": "Send a message"
+  },
+  "ContactForm": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "placeholder": "Tell me about your project…",
+    "website": "Website",
+    "send": "Send message",
+    "sending": "Sending…",
+    "privacy": "Your name, email and message are only used to reply to you. See the <link>privacy policy</link>.",
+    "errors": {
+      "name": "Please enter your name.",
+      "nameLong": "Name is too long.",
+      "email": "Please enter a valid email.",
+      "messageShort": "Your message is a bit short.",
+      "messageLong": "Your message is too long (5000 characters max).",
+      "check": "Please check the highlighted fields.",
+      "failed": "Something went wrong. Please try again, or email me directly."
+    },
+    "success": "Thanks! Your message has been sent. I'll get back to you soon.",
+    "emailSubject": "New message from {name}"
+  },
+  "Footer": {
+    "rights": "© {year} {name}. All rights reserved.",
+    "legalNotice": "Legal notice",
+    "privacy": "Privacy",
+    "cookieSettings": "Cookie settings"
+  },
+  "Cookies": {
+    "dialog": "Cookie consent",
+    "text": "I use Google Analytics to see how this site is used, only if you agree.",
+    "learnMore": "Learn more",
+    "decline": "Decline",
+    "accept": "Accept"
+  },
+  "Theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "Legal": {
+    "lastUpdated": "Last updated:",
+    "legalNoticeTitle": "Legal notice",
+    "legalNoticeDescription": "Legal notice of {domain}: publisher, hosting and intellectual property.",
+    "privacyTitle": "Privacy policy",
+    "privacyDescription": "What personal data this website collects, why, for how long, and your rights (GDPR)."
+  }
+}

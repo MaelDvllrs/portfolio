@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { routing, type Locale } from "@/i18n/routing";
 import { slugify } from "@/lib/slugify";
 import { ILLUSTRATIONS, type IllustrationKey } from "@/components/service-illustrations";
 
@@ -6,6 +7,8 @@ import { ILLUSTRATIONS, type IllustrationKey } from "@/components/service-illust
 // Les données sont mises en cache avec un tag ; le CMS appelle /api/revalidate après chaque
 // modification pour invalider ce tag. Si le CMS n'est pas configuré ou ne répond pas,
 // on retombe sur le contenu statique de src/content/site.ts : le site reste toujours affichable.
+// Langues : chaque lecture demande la langue de la page (`locale`) ; un champ non traduit dans le
+// CMS revient en anglais (`fallback-locale`). Les slugs des services et articles sont traduits.
 
 const CMS_URL = process.env.CMS_URL;
 
@@ -50,13 +53,14 @@ type CmsProject = {
   tools?: string[] | null;
 };
 
-const TYPE_LABELS: Record<CmsProject["type"], string> = {
-  saas: "SaaS",
-  ai: "AI",
-  web: "Web",
-  "internal-tool": "Internal tool",
-  software: "Software",
+const TYPE_LABELS: Record<Locale, Record<CmsProject["type"], string>> = {
+  en: { saas: "SaaS", ai: "AI", web: "Web", "internal-tool": "Internal tool", software: "Software" },
+  fr: { saas: "SaaS", ai: "IA", web: "Web", "internal-tool": "Outil interne", software: "Logiciel" },
 };
+const NOW: Record<Locale, string> = { en: "now", fr: "aujourd'hui" };
+
+// Paramètres de langue d'une requête à l'API Payload
+const localeParams = (locale: Locale) => ({ locale, "fallback-locale": routing.defaultLocale });
 
 // Valeurs du select `tools` du CMS → noms affichés (à garder synchronisé avec
 // TOOL_OPTIONS dans portfolio-cms/src/collections/Projects.ts)
@@ -84,9 +88,9 @@ const TOOL_LABELS: Record<string, string> = {
 type Period = { startYear?: number | null; endYear?: number | null; ongoing?: boolean | null };
 
 // Une seule année si le projet tient dans l'année (pas de fin, ou fin = début)
-export function formatPeriod({ startYear, endYear, ongoing }: Period): string | null {
+export function formatPeriod({ startYear, endYear, ongoing }: Period, locale: Locale = "en"): string | null {
   if (!startYear) return null;
-  if (ongoing) return `${startYear} – now`;
+  if (ongoing) return `${startYear} – ${NOW[locale]}`;
   if (!endYear || endYear === startYear) return String(startYear);
   return `${startYear} – ${endYear}`;
 }
@@ -99,15 +103,15 @@ function toMedia(media: CmsProject["image"]): WorkProject["image"] {
   return { url: encodeURI(url), alt: media.alt };
 }
 
-function fromCms(project: CmsProject): WorkProject {
+function fromCms(project: CmsProject, locale: Locale): WorkProject {
   return {
     id: String(project.id),
     slug: project.slug,
     name: project.name,
     description: project.description ?? "",
-    type: TYPE_LABELS[project.type],
+    type: TYPE_LABELS[locale][project.type],
     tools: project.tools?.map((t) => TOOL_LABELS[t] ?? t) ?? [],
-    period: formatPeriod(project),
+    period: formatPeriod(project, locale),
     image: toMedia(project.image),
     logo: toMedia(project.logo),
     url: project.url || null,
@@ -127,7 +131,7 @@ function unwrapRichText(html: string | null | undefined): string {
   return inner.replace(/<p>(\s|<br\s*\/?>)*<\/p>/g, "").trim() ? inner : "";
 }
 
-function staticProjects(): WorkProject[] {
+function staticProjects(locale: Locale): WorkProject[] {
   return site.work.projects.map((p) => ({
     id: p.name,
     slug: slugify(p.name),
@@ -135,7 +139,7 @@ function staticProjects(): WorkProject[] {
     description: p.description,
     type: p.type,
     tools: p.tools,
-    period: formatPeriod(p),
+    period: formatPeriod(p, locale),
     image: p.image ? { url: p.image, alt: "" } : null,
     logo: p.logo ? { url: p.logo, alt: `${p.name} logo` } : null,
     url: p.url,
@@ -144,10 +148,11 @@ function staticProjects(): WorkProject[] {
 }
 
 /** Projets publiés (accueil, /work et pages projet), triés par `order`. */
-export async function getProjects(): Promise<WorkProject[]> {
-  if (!CMS_URL) return staticProjects();
+export async function getProjects(locale: Locale = "en"): Promise<WorkProject[]> {
+  if (!CMS_URL) return staticProjects(locale);
 
   const params = new URLSearchParams({
+    ...localeParams(locale),
     depth: "1", // inclut les médias (image, logo)
     sort: "order",
     limit: "20",
@@ -161,16 +166,16 @@ export async function getProjects(): Promise<WorkProject[]> {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data: { docs: CmsProject[] } = await res.json();
-    return data.docs.length ? data.docs.map(fromCms) : staticProjects();
+    return data.docs.length ? data.docs.map((p) => fromCms(p, locale)) : staticProjects(locale);
   } catch (error) {
     console.error("[cms] Impossible de charger les projets, contenu statique utilisé :", error);
-    return staticProjects();
+    return staticProjects(locale);
   }
 }
 
 /** Un projet par son slug (page /work/<slug>), ou null s'il n'existe pas / n'est pas publié. */
-export async function getProject(slug: string): Promise<WorkProject | null> {
-  const projects = await getProjects();
+export async function getProject(slug: string, locale: Locale = "en"): Promise<WorkProject | null> {
+  const projects = await getProjects(locale);
   return projects.find((p) => p.slug === slug) ?? null;
 }
 
@@ -248,10 +253,11 @@ function serviceFromCms(service: CmsService): Service {
 }
 
 /** Services publiés, triés par `order`. Sans CMS : aucun service. */
-export async function getServices(): Promise<Service[]> {
+export async function getServices(locale: Locale = "en"): Promise<Service[]> {
   if (!CMS_URL) return [];
 
   const params = new URLSearchParams({
+    ...localeParams(locale),
     depth: "1", // inclut la couverture
     sort: "order",
     limit: "50",
@@ -273,8 +279,8 @@ export async function getServices(): Promise<Service[]> {
 }
 
 /** Un service par son slug (page /services/<slug>), ou null s'il n'existe pas / n'est pas publié. */
-export async function getService(slug: string): Promise<Service | null> {
-  const services = await getServices();
+export async function getService(slug: string, locale: Locale = "en"): Promise<Service | null> {
+  const services = await getServices(locale);
   return services.find((s) => s.slug === slug) ?? null;
 }
 
@@ -346,10 +352,11 @@ function postFromCms(post: CmsPost): BlogPost {
 }
 
 /** Articles publiés, du plus récent au plus ancien. Sans CMS : aucun article. */
-export async function getPosts(): Promise<BlogPost[]> {
+export async function getPosts(locale: Locale = "en"): Promise<BlogPost[]> {
   if (!CMS_URL) return [];
 
   const params = new URLSearchParams({
+    ...localeParams(locale),
     depth: "1", // inclut la couverture
     sort: "-publishedAt",
     limit: "100",
@@ -371,9 +378,40 @@ export async function getPosts(): Promise<BlogPost[]> {
 }
 
 /** Un article par son slug (page /blog/<slug>), ou null s'il n'existe pas / n'est pas publié. */
-export async function getPost(slug: string): Promise<BlogPost | null> {
-  const posts = await getPosts();
+export async function getPost(slug: string, locale: Locale = "en"): Promise<BlogPost | null> {
+  const posts = await getPosts(locale);
   return posts.find((p) => p.slug === slug) ?? null;
+}
+
+// --- Slugs par langue ---------------------------------------------------------------------
+
+type Listed = { id: string; slug: string };
+const LISTS = { services: getServices, posts: getPosts, projects: getProjects } as const;
+
+/** Slug d'un document dans chaque langue (liens hreflang, sélecteur de langue, sitemap). */
+export async function getSlugsById(kind: keyof typeof LISTS, id: string): Promise<Record<Locale, string>> {
+  const lists = await Promise.all(routing.locales.map((l) => LISTS[kind](l) as Promise<Listed[]>));
+  return Object.fromEntries(
+    routing.locales.map((l, i) => [l, lists[i].find((d) => d.id === id)?.slug ?? ""]),
+  ) as Record<Locale, string>;
+}
+
+/**
+ * Slug inconnu dans cette langue mais connu dans une autre (ex. lien vers l'ancien slug, ou
+ * changement de langue sur une page) : renvoie le slug de ce document dans la langue demandée,
+ * pour rediriger vers la bonne URL ; null si le slug n'existe dans aucune langue.
+ */
+export async function findSlugInOtherLocales(
+  kind: keyof typeof LISTS,
+  slug: string,
+  locale: Locale,
+): Promise<string | null> {
+  for (const other of routing.locales) {
+    if (other === locale) continue;
+    const doc = ((await LISTS[kind](other)) as Listed[]).find((d) => d.slug === slug);
+    if (doc) return (await getSlugsById(kind, doc.id))[locale] || null;
+  }
+  return null;
 }
 
 // --- Bandeau de logos ---------------------------------------------------------------------
@@ -402,7 +440,7 @@ function staticClients(): ClientLogo[] {
  * (collection `clients`), puis les logos des projets publiés de « Selected work »
  * (sans doublon de nom). Sans CMS : seulement les logos statiques.
  */
-export async function getClientLogos(): Promise<ClientLogo[]> {
+export async function getClientLogos(locale: Locale = "en"): Promise<ClientLogo[]> {
   if (!CMS_URL) return staticClients();
 
   try {
@@ -412,7 +450,7 @@ export async function getClientLogos(): Promise<ClientLogo[]> {
         cache: "force-cache",
         next: { tags: [CMS_TAGS.clients] },
       }),
-      getProjects(),
+      getProjects(locale),
     ]);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data: { docs: CmsClient[] } = await res.json();

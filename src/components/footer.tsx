@@ -1,27 +1,32 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { site } from "@/content/site";
 import { Frame } from "@/components/frame";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { Logo } from "@/components/ui/logo";
 import { SOCIAL_ICONS } from "@/components/ui/social-icons";
 import { GlowWordmark } from "@/components/ui/glow-wordmark";
-
-const pages = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/services" },
-  { label: "Work", href: "/work" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
-];
+import { CookieSettingsButton } from "@/components/cookie-consent";
 
 // Trois rangées (chacune sa ligne haute pleine largeur) :
 // 1. logo à gauche, réseaux (icônes seules) à droite ;
 // 2. nom + description à gauche, liens des pages à droite (en dessous, alignés à gauche, sur mobile) ;
-// 3. copyright à gauche, choix du thème à droite ;
+// 3. copyright et liens légaux à gauche, choix du thème à droite ;
 // puis « trymael » en très grand, en contour lumineux (lueur sous la souris, effet déclenché par
 // tout le footer). Les rangées passent au-dessus de sa lumière (z-10) et le mot ne capte pas la
 // souris (pointer-events-none) : les liens et le choix du thème restent cliquables.
 export function Footer() {
+  const t = useTranslations("Footer");
+  const nav = useTranslations("Nav");
+  const hero = useTranslations("Hero");
+  const pages = [
+    { label: nav("home"), href: "/" },
+    { label: nav("services"), href: "/services" },
+    { label: nav("work"), href: "/work" },
+    { label: nav("blog"), href: "/blog" },
+    { label: nav("contact"), href: "/contact" },
+  ];
+
   return (
     // overflow-x-clip : la lumière du mot peut sortir de la colonne, pas de l'écran (pas de scroll horizontal)
     <footer className="overflow-x-clip text-sm">
@@ -57,9 +62,9 @@ export function Footer() {
       <Frame as="div" className="relative z-10 flex flex-wrap justify-between gap-8 py-6">
         <div className="max-w-xs">
           <p className="font-semibold">{site.name}</p>
-          <p className="mt-1 text-muted">{site.profile.bio[0]}</p>
+          <p className="mt-1 text-muted">{hero.raw("bio")[0]}</p>
         </div>
-        <nav aria-label="Footer">
+        <nav aria-label={nav("footer")}>
           <ul className="flex flex-col items-start gap-2 sm:items-end">
             {pages.map((p) => (
               <li key={p.href}>
@@ -73,9 +78,16 @@ export function Footer() {
       </Frame>
 
       <Frame as="div" className="relative z-10 flex items-center justify-between gap-6 py-2">
-        <p className="text-muted">
-          © {new Date().getFullYear()} {site.name}. All rights reserved.
-        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
+          <p>{t("rights", { year: new Date().getFullYear(), name: site.name })}</p>
+          <Link href="/legal-notice" className="transition-colors hover:text-foreground">
+            {t("legalNotice")}
+          </Link>
+          <Link href="/privacy-policy" className="transition-colors hover:text-foreground">
+            {t("privacy")}
+          </Link>
+          <CookieSettingsButton label={t("cookieSettings")} className="cursor-pointer transition-colors hover:text-foreground" />
+        </div>
         <ThemeSwitch />
       </Frame>
 

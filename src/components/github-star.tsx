@@ -1,4 +1,5 @@
 import { siGithub } from "simple-icons";
+import { getTranslations } from "next-intl/server";
 import { site } from "@/content/site";
 
 // Nombre d'étoiles du dépôt public (API GitHub, sans clé), mis en cache 1 h ; null si indisponible
@@ -22,13 +23,15 @@ const compact = new Intl.NumberFormat("en", { notation: "compact" });
 // Bouton « Star » du dépôt du portfolio sur GitHub : logo | nombre d'étoiles, dans un cadre compact.
 export async function GitHubStar() {
   const stars = await getStars(site.repo);
+  const t = await getTranslations("Nav");
+  const label = t("githubStar", { repo: site.repo });
 
   return (
     <a
       href={`https://github.com/${site.repo}`}
       target="_blank"
       rel="noreferrer"
-      aria-label={`Star ${site.repo} on GitHub${stars !== null ? ` (${stars} stars)` : ""}`}
+      aria-label={stars !== null ? `${label} (${t("githubStars", { count: stars })})` : label}
       className="flex h-7 items-center overflow-hidden rounded-md border border-border text-xs font-medium text-muted transition-colors hover:text-foreground"
     >
       <span className="flex items-center px-1.5">

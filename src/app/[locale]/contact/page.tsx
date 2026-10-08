@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localeAlternates } from "@/lib/seo";
 import { site } from "@/content/site";
 import { Frame } from "@/components/frame";
 import { SectionTitle } from "@/components/section";
 import { ContactForm } from "@/components/contact-form";
 import { Divider } from "@/components/ui/divider";
 
-export const metadata: Metadata = {
-  title: `Contact — ${site.name}`,
-  description: site.contactPage.intro,
-  alternates: { canonical: "/contact" },
-};
+export async function generateMetadata({ params }: PageProps<"/[locale]/contact">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "ContactPage" });
+  return {
+    title: `${t("title")} — ${site.name}`,
+    description: t("intro"),
+    alternates: localeAlternates(locale, "/contact"),
+  };
+}
 
 // Page de contact : en-tête (titre, intro), puis le formulaire.
-export default function ContactPage() {
-  const { contactPage } = site;
+export default async function ContactPage({ params }: PageProps<"/[locale]/contact">) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("ContactPage");
+  const contactPage = { title: t("title"), intro: t("intro") };
 
   return (
     // pt-14 : sous le header fixe
@@ -26,7 +35,7 @@ export default function ContactPage() {
       <Divider />
 
       <section id="form" className="scroll-mt-20">
-        <SectionTitle>Send a message</SectionTitle>
+        <SectionTitle>{t("formTitle")}</SectionTitle>
         <Frame as="div" className="py-6">
           <ContactForm />
         </Frame>

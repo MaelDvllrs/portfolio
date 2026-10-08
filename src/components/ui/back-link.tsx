@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowIcon } from "@/components/ui/icons";
 
 // Lien de retour en bouton texte, miroir de « View all » (SectionTitle) : au survol, le texte

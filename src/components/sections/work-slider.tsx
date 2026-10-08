@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import type { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -12,6 +13,7 @@ import { ArrowIcon } from "@/components/ui/icons";
 // `loop` : boucle infinie (accueil). Sans boucle (pages service), le slider s'arrête au premier
 // et au dernier projet, et les flèches se désactivent aux extrémités.
 export function WorkSlider({ projects, loop = true }: { projects: WorkProject[]; loop?: boolean }) {
+  const t = useTranslations("Home");
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [current, setCurrent] = useState(0);
   const [edges, setEdges] = useState({ start: true, end: projects.length <= 1 });
@@ -69,7 +71,7 @@ export function WorkSlider({ projects, loop = true }: { projects: WorkProject[];
           <Button
             size="icon"
             variant="secondary"
-            aria-label="Previous slide"
+            aria-label={t("previousSlide")}
             disabled={!loop && edges.start}
             onClick={() => swiper?.slidePrev()}
           >
@@ -78,7 +80,7 @@ export function WorkSlider({ projects, loop = true }: { projects: WorkProject[];
           <Button
             size="icon"
             variant="secondary"
-            aria-label="Next slide"
+            aria-label={t("nextSlide")}
             disabled={!loop && edges.end}
             onClick={() => swiper?.slideNext()}
           >

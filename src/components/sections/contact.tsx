@@ -1,11 +1,12 @@
-import { site } from "@/content/site";
+import { useTranslations } from "next-intl";
 import { Frame } from "@/components/frame";
 import { ButtonLink } from "@/components/ui/button";
 import { DotGrid } from "@/components/ui/dot-grid";
 import { ArrowIcon } from "@/components/ui/icons";
 
 export function Contact() {
-  const { contact } = site;
+  const t = useTranslations("ContactSection");
+  const contact = { title: t("title"), cta: t("cta") };
   return (
     <Frame id="contact" className="relative overflow-hidden py-16 text-center sm:py-20">
       <DotGrid />

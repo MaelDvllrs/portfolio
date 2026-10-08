@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { ButtonLink } from "@/components/ui/button";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 // Menu burger (petits écrans) : bouton à 2 barres qui se transforme en croix, et panneau qui
 // arrive de la droite sous la barre de navigation (le header reste visible au-dessus), avec les
@@ -10,6 +12,7 @@ import { ButtonLink } from "@/components/ui/button";
 // Se ferme avec le même bouton, Échap ou au clic sur un lien ; bloque le défilement de la page
 // tant qu'il est ouvert.
 export function MobileMenu({ links }: { links: { label: string; href: string }[] }) {
+  const t = useTranslations("Nav");
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
@@ -34,7 +37,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
       {/* 2 barres → croix : elles se rejoignent au centre et pivotent */}
       <button
         type="button"
-        aria-label={open ? "Close menu" : "Open menu"}
+        aria-label={open ? t("closeMenu") : t("openMenu")}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
@@ -46,7 +49,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
 
       <div
         id={panelId}
-        aria-label="Menu"
+        aria-label={t("menu")}
         // fermé : hors écran à droite et inerte (ni focus ni lecteur d'écran)
         inert={!open}
         // sous la barre du header (3.5rem + sa bordure basse) ; hauteur en dvh : suit la zone
@@ -55,7 +58,7 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <nav aria-label="Mobile" className="flex-1 px-8 py-8">
+        <nav aria-label={t("mobile")} className="flex-1 px-8 py-8">
           <ul className="flex flex-col gap-2">
             {links.map((item) => (
               <li key={item.href}>
@@ -67,9 +70,10 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
           </ul>
         </nav>
 
-        <div className="px-8 pb-8">
+        <div className="flex flex-col gap-6 px-8 pb-8">
+          <LocaleSwitcher className="self-start text-sm" placement="up" />
           <ButtonLink href="/contact" variant="primary" onClick={close} className="w-full">
-            Contact
+            {t("contact")}
           </ButtonLink>
         </div>
       </div>

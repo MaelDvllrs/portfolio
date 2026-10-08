@@ -2,6 +2,7 @@
 
 import { cloneElement } from "react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 import "react-github-calendar/tooltips.css";
 import { site } from "@/content/site";
 import { Section } from "@/components/section";
@@ -38,8 +39,9 @@ const recolorLegend = (block: React.ReactElement<{ children?: React.ReactNode }>
 // via l'API github-contributions-api.jogruber.de, utilisée par react-github-calendar).
 export function GitHub() {
   const { github } = site;
+  const t = useTranslations("GitHub");
   return (
-    <Section id="github" title={github.title}>
+    <Section id="github" title={t("title")}>
       <a
         href={`https://github.com/${github.username}`}
         target="_blank"
@@ -57,10 +59,15 @@ export function GitHub() {
         className="text-muted"
         renderBlock={(block, activity) => recolor(block, activity.level)}
         renderColorLegend={(block, level) => recolorLegend(block, level)}
-        labels={{ totalCount: "{{count}} contributions in the last year · Source: GitHub" }}
+        // « {{count}} » est remplacé par la librairie : on le laisse tel quel dans le message traduit
+        labels={{
+          totalCount: t("totalCount", { count: "{{count}}" }),
+          months: t.raw("months") as string[],
+          legend: { less: t("less"), more: t("more") },
+        }}
         tooltips={{
           activity: {
-            text: (a) => `${a.count} contribution${a.count === 1 ? "" : "s"} on ${a.date}`,
+            text: (a) => t("tooltip", { count: a.count, date: a.date }),
           },
         }}
       />

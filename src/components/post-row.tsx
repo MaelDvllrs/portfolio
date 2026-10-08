@@ -1,11 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { BlogPost } from "@/lib/cms";
 import { formatDate } from "@/lib/format";
 
 // Ligne de la liste des articles (/blog) : vignette à gauche, puis date, titre, résumé et tags.
 // Même lueur au survol que les cartes de /work.
-export function PostRow({ post }: { post: BlogPost }) {
+// `heading` : balise du titre, h2 (liste /blog) ou h3 (« More posts », sous un titre de section h2)
+export function PostRow({ post, heading: Heading = "h2" }: { post: BlogPost; heading?: "h2" | "h3" }) {
+  const locale = useLocale();
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -26,9 +29,9 @@ export function PostRow({ post }: { post: BlogPost }) {
 
       <div className="relative flex flex-col gap-2">
         <time dateTime={post.publishedAt} className="text-xs text-muted">
-          {formatDate(post.publishedAt)}
+          {formatDate(post.publishedAt, locale)}
         </time>
-        <h2 className="text-base leading-snug font-medium tracking-tight">{post.title}</h2>
+        <Heading className="text-base leading-snug font-medium tracking-tight">{post.title}</Heading>
         <p className="line-clamp-2 text-sm text-muted">{post.excerpt}</p>
         {post.tags.length > 0 && (
           <ul className="mt-auto flex flex-wrap gap-1.5 pt-1 text-[0.6875rem] text-muted">
