@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates, localizedPaths } from "@/lib/seo";
+import { pageMetadata, localizedPaths } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import { permanentRedirect } from "@/i18n/navigation";
 import { LocaleAlternates } from "@/components/locale-alternates";
@@ -37,16 +37,15 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/services
   const service = await getService(slug, locale as Locale);
   if (!service) return {};
   const paths = localizedPaths("/services", await getSlugsById("services", service.id));
-  return {
+  return pageMetadata({
+    locale,
     title: service.metaTitle,
     description: service.metaDescription,
-    alternates: localeAlternates(locale, paths),
-    openGraph: {
-      title: service.metaTitle,
-      description: service.metaDescription,
-      images: service.cover ? [service.cover.url] : undefined,
-    },
-  };
+    paths,
+    image: service.cover,
+    ogTitle: service.name,
+    ogSubtitle: service.summary,
+  });
 }
 
 // Page d'un service : retour au hub, hero (illustration ou couverture en fond, nom, résumé et

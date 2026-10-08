@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { Link } from "@/i18n/navigation";
 import { site } from "@/content/site";
 import { LegalPage } from "@/components/legal-page";
@@ -8,11 +8,13 @@ import { LegalPage } from "@/components/legal-page";
 export async function generateMetadata({ params }: PageProps<"/[locale]/privacy-policy">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Legal" });
-  return {
+  return pageMetadata({
+    locale,
     title: `${t("privacyTitle")} — ${site.name}`,
     description: t("privacyDescription"),
-    alternates: localeAlternates(locale, "/privacy-policy"),
-  };
+    paths: "/privacy-policy",
+    ogTitle: t("privacyTitle"),
+  });
 }
 
 // Politique de confidentialité (RGPD). Décrit le fonctionnement réel du site : Google Analytics

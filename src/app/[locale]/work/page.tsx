@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import { site } from "@/content/site";
 import { getProjects } from "@/lib/cms";
@@ -12,11 +12,13 @@ import { Contact } from "@/components/sections/contact";
 export async function generateMetadata({ params }: PageProps<"/[locale]/work">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Work" });
-  return {
+  return pageMetadata({
+    locale,
     title: `${t("title")} — ${site.name}`,
     description: t("intro"),
-    alternates: localeAlternates(locale, "/work"),
-  };
+    paths: "/work",
+    ogTitle: t("title"),
+  });
 }
 
 // Hub de tous les projets (mêmes données que « Selected work » : CMS, avec repli statique).

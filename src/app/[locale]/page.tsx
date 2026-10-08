@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/hero";
-import { setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { pageMetadata } from "@/lib/seo";
+import { site } from "@/content/site";
 import { Divider } from "@/components/ui/divider";
 import { Clients } from "@/components/sections/clients";
 import { GitHub } from "@/components/sections/github";
@@ -15,7 +16,14 @@ import { Services } from "@/components/sections/services";
 // Accueil : métadonnées du layout + liens hreflang vers /en et /fr
 export async function generateMetadata({ params }: PageProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
-  return { alternates: localeAlternates(locale, "") };
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return pageMetadata({
+    locale,
+    title: t("title"),
+    description: t("description"),
+    paths: "",
+    ogTitle: site.name,
+  });
 }
 
 export default async function Home({ params }: PageProps<"/[locale]">) {

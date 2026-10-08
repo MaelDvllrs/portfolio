@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -30,12 +30,14 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/work/[sl
   const { locale, slug } = await params;
   const project = await getProject(slug, locale as Locale);
   if (!project) return {};
-  return {
+  return pageMetadata({
+    locale,
     title: `${project.name} — ${site.name}`,
     description: project.description || undefined,
-    alternates: localeAlternates(locale, `/work/${project.slug}`),
-    openGraph: project.image ? { images: [project.image.url] } : undefined,
-  };
+    paths: `/work/${project.slug}`,
+    image: project.image,
+    ogTitle: project.name,
+  });
 }
 
 // Page d'un projet, façon profil (comme le hero de l'accueil) : bannière = couverture,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import { site } from "@/content/site";
 import { getServices } from "@/lib/cms";
@@ -12,11 +12,13 @@ import { Contact } from "@/components/sections/contact";
 export async function generateMetadata({ params }: PageProps<"/[locale]/services">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Services" });
-  return {
+  return pageMetadata({
+    locale,
     title: `${t("title")} — ${site.name}`,
     description: t("intro"),
-    alternates: localeAlternates(locale, "/services"),
-  };
+    paths: "/services",
+    ogTitle: t("title"),
+  });
 }
 
 // Hub des services (CMS, collection `services`, triés par `order`) : en-tête, cartes pleine

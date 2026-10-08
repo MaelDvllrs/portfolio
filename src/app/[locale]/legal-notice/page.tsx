@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { Link } from "@/i18n/navigation";
 import { site } from "@/content/site";
 import { LegalPage } from "@/components/legal-page";
@@ -8,11 +8,13 @@ import { LegalPage } from "@/components/legal-page";
 export async function generateMetadata({ params }: PageProps<"/[locale]/legal-notice">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Legal" });
-  return {
+  return pageMetadata({
+    locale,
     title: `${t("legalNoticeTitle")} — ${site.name}`,
     description: t("legalNoticeDescription", { domain: site.url.replace(/^https?:\/\//, "") }),
-    alternates: localeAlternates(locale, "/legal-notice"),
-  };
+    paths: "/legal-notice",
+    ogTitle: t("legalNoticeTitle"),
+  });
 }
 
 // Mentions légales (loi française LCEN, art. 6) : éditeur, directeur de la publication, hébergeur,

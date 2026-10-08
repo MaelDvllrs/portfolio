@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import { site } from "@/content/site";
 import { getPosts } from "@/lib/cms";
@@ -12,11 +12,13 @@ import { Contact } from "@/components/sections/contact";
 export async function generateMetadata({ params }: PageProps<"/[locale]/blog">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Blog" });
-  return {
+  return pageMetadata({
+    locale,
     title: `${t("title")} — ${site.name}`,
     description: t("intro"),
-    alternates: localeAlternates(locale, "/blog"),
-  };
+    paths: "/blog",
+    ogTitle: t("title"),
+  });
 }
 
 // Liste des articles (CMS, collection `posts`), du plus récent au plus ancien.

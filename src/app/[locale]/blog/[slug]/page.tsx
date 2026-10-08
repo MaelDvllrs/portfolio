@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates, localizedPaths } from "@/lib/seo";
+import { pageMetadata, localizedPaths } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import { permanentRedirect } from "@/i18n/navigation";
 import { LocaleAlternates } from "@/components/locale-alternates";
@@ -34,22 +34,21 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[sl
   const post = await getPost(slug, locale as Locale);
   if (!post) return {};
   const paths = localizedPaths("/blog", await getSlugsById("posts", post.id));
-  return {
+  return pageMetadata({
+    locale,
     title: post.metaTitle,
     description: post.metaDescription,
-    alternates: localeAlternates(locale, paths),
-    openGraph: {
-      type: "article",
-      title: post.metaTitle,
-      description: post.metaDescription,
+    paths,
+    image: post.cover,
+    ogTitle: post.title,
+    ogSubtitle: post.excerpt,
+    article: {
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
-      authors: [site.name],
+      authors: [post.author?.name ?? site.name],
       tags: post.tags,
-      images: post.cover ? [post.cover.url] : undefined,
     },
-    twitter: { card: post.cover ? "summary_large_image" : "summary" },
-  };
+  });
 }
 
 // Article : retour à la liste, en-tête (date, temps de lecture, titre, résumé, tags),

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { localeAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { site } from "@/content/site";
 import { Frame } from "@/components/frame";
 import { SectionTitle } from "@/components/section";
@@ -10,11 +10,13 @@ import { Divider } from "@/components/ui/divider";
 export async function generateMetadata({ params }: PageProps<"/[locale]/contact">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ContactPage" });
-  return {
+  return pageMetadata({
+    locale,
     title: `${t("title")} — ${site.name}`,
     description: t("intro"),
-    alternates: localeAlternates(locale, "/contact"),
-  };
+    paths: "/contact",
+    ogTitle: t("title"),
+  });
 }
 
 // Page de contact : en-tête (titre, intro), puis le formulaire.
