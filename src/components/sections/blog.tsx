@@ -5,12 +5,12 @@ import { Section } from "@/components/section";
 import { PostCard } from "@/components/post-card";
 import { Divider } from "@/components/ui/divider";
 
-// Derniers articles du blog sur l'accueil : 4 cartes sur 2 colonnes, lien vers /blog.
+// Derniers articles du blog sur l'accueil : 2 derniers articles sur 2 colonnes, lien vers /blog.
 // Rien n'est affiché tant qu'aucun article n'est publié (séparateur de fin compris, pour ne
 // pas laisser deux séparateurs collés sur l'accueil).
 export async function Blog() {
   const [t, common] = await Promise.all([getTranslations("Home"), getTranslations("Common")]);
-  const posts = (await getPosts((await getLocale()) as Locale)).slice(0, 4);
+  const posts = (await getPosts((await getLocale()) as Locale)).slice(0, 2);
   if (!posts.length) return null;
 
   return (
