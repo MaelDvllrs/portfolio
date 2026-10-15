@@ -49,7 +49,7 @@ function English() {
 
       <h2>Data controller</h2>
       <p>
-        {publisher.name}, {publisher.address}. Contact: {email}.
+        {publisher.name}. Contact: {email}.
       </p>
 
       <h2>Contact form</h2>
@@ -137,7 +137,7 @@ function French() {
 
       <h2>Responsable du traitement</h2>
       <p>
-        {publisher.name}, {publisher.address}. Contact : {email}.
+        {publisher.name}. Contact : {email}.
       </p>
 
       <h2>Formulaire de contact</h2>

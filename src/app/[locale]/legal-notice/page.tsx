@@ -49,8 +49,6 @@ function English() {
       <p>
         This website is published by <strong>{publisher.name}</strong>, a private individual.
         <br />
-        Address: {publisher.address}
-        <br />
         Email: {email}
       </p>
       <p>
@@ -91,8 +89,6 @@ function French() {
       <h2>Éditeur</h2>
       <p>
         Ce site est édité par <strong>{publisher.name}</strong>, particulier.
-        <br />
-        Adresse : {publisher.address}
         <br />
         Email : {email}
       </p>

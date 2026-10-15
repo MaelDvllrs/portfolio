@@ -41,6 +41,8 @@ export const site = {
     updated: "2026-10-08", // date de dernière mise à jour des deux pages
     publisher: {
       name: "Maël Devillers",
+      // adresse postale non publiée pour l'instant (particulier : identité communiquée à l'hébergeur) ;
+      // à réafficher dans les pages légales si besoin
       address: "31 chemin du Manival, 38330 Saint-Ismier, France",
       // adresse publique affichée sur les pages légales (distincte de l'email de réception du formulaire)
       email: "marlholding.sas@gmail.com",
