@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "Maël Devillers — Développeur Fullstack",
-    "description": "Développeur fullstack : je conçois des produits web, des SaaS et des outils IA, de l'idée à la mise en production.",
+    "title": "Maël Devillers — Ingénieur logiciel AI-Native",
+    "description": "Ingénieur logiciel : je développe des SaaS, des produits IA et des logiciels métier à la vitesse de l'IA, avec la rigueur de l'ingénierie : architecture, sécurité, tests, production.",
     "workTitle": "Réalisations",
     "servicesTitle": "Services",
     "blogTitle": "Blog",
@@ -32,7 +32,7 @@
   },
   "Hero": {
     "bio": [
-      "Développeur fullstack : je conçois des produits web, des SaaS et des outils IA, de l'idée à la mise en production."
+      "Ingénieur logiciel AI-Native. Je construis des logiciels à la vitesse de l'IA, avec les exigences de l'ingénierie logicielle."
     ],
     "location": "Paris, France",
     "badgeCto": "CTO & Co-fondateur de Wenoble",
@@ -47,21 +47,21 @@
     "nextSlide": "Diapositive suivante"
   },
   "About": {
-    "title": "Développeur, bâtisseur, entrepreneur.",
-    "subtitle": "Des produits construits de A à Z.",
+    "title": "Ingénieur d'abord. AI-Native par défaut.",
+    "subtitle": "De l'idée à la production, de bout en bout.",
     "paragraphs": [
-      "Je suis Maël, développeur fullstack français et co-fondateur de Wenoble.",
-      "Je conçois et développe des produits web, de la première idée à la mise en production.",
-      "Je travaille à la croisée du produit, de l'ingénierie et de l'IA."
+      "Je suis Maël, ingénieur logiciel et co-fondateur de Wenoble, avec quatre ans de développement full-stack derrière moi.",
+      "J'utilise les LLM, les agents et Claude Code pour aller plus vite, et je reste maître de chaque ligne mise en production : architecture, relecture, tests, sécurité.",
+      "Je travaille sur toute la chaîne, de TypeScript et Python à Postgres, Docker et aux serveurs Linux, et je m'occupe de ce qui se passe après la mise en ligne."
     ],
     "stats": [
       {
         "value": "4+",
-        "label": "Années de développement web"
+        "label": "Années à construire du logiciel"
       },
       {
         "value": "50+",
-        "label": "Projets / clients"
+        "label": "Projets livrés"
       },
       {
         "value": "3",
@@ -95,55 +95,55 @@
     "more": "Plus"
   },
   "Stack": {
-    "title": "Les outils avec lesquels j'aime construire.",
+    "title": "La stack avec laquelle je construis et je livre.",
     "tools": [
       {
         "name": "React",
-        "description": "Ma librairie d'interface de référence. Des interfaces en composants, des dashboards aux sites vitrines."
+        "description": "Des interfaces en composants, des dashboards internes aux interfaces produit, pensées pour rester maintenables."
       },
       {
         "name": "Next.js",
-        "description": "Le framework derrière la plupart de mes produits : routage, rendu serveur et API au même endroit."
+        "description": "Mon choix par défaut pour un produit : rendu serveur, routage et API dans une seule base de code, prête pour la production."
       },
       {
         "name": "TypeScript",
-        "description": "Des types partout, du front au back. Moins de bugs, des refactors plus sûrs, une prise en main plus rapide."
+        "description": "Des types stricts de bout en bout. C'est aussi ce qui rend le code généré par l'IA fiable et relisible."
       },
       {
         "name": "Tailwind CSS",
-        "description": "Un style utilitaire pour designer directement dans le code et garder des interfaces cohérentes."
+        "description": "Le style directement dans le code, avec un design system cohérent plutôt que du CSS au cas par cas."
       },
       {
         "name": "Webflow",
-        "description": "Du développement visuel pour des sites vitrines que les équipes modifient elles-mêmes, sans développeur."
+        "description": "Des sites vitrines que les équipes modifient elles-mêmes, avec une structure propre et du code sur mesure là où il compte."
       },
       {
         "name": "Node.js",
-        "description": "Du JavaScript côté serveur pour les API, les workers, les scripts et les intégrations."
+        "description": "API, workers, scripts et intégrations côté serveur : le liant de la plupart des produits."
       },
       {
         "name": "Express",
-        "description": "Un serveur Node.js minimaliste pour des API légères, des webhooks et des prototypes rapides."
+        "description": "Des API légères, des webhooks et des services quand un framework complet serait de trop."
       },
       {
         "name": "NestJS",
-        "description": "Des backends structurés pour les API plus importantes : modules, injection de dépendances, architecture propre."
+        "description": "Des backends structurés pour les API plus importantes : modules, injection de dépendances, architecture testable."
       },
       {
         "name": "PostgreSQL",
-        "description": "La base de données en qui j'ai confiance : relationnelle, fiable et puissante avec JSONB et ses extensions."
+        "description": "La base de données en qui j'ai confiance : relationnelle, transactionnelle, et flexible grâce au JSONB."
       },
       {
         "name": "MongoDB",
-        "description": "Une base orientée documents quand les données sont flexibles, imbriquées ou changent souvent de forme."
+        "description": "Un stockage orienté documents quand les données sont très imbriquées ou changent souvent de forme."
       },
       {
         "name": "Supabase",
-        "description": "Postgres avec authentification, stockage et temps réel intégrés. Idéal pour lancer un MVP rapidement."
+        "description": "Postgres avec authentification, stockage et règles d'accès intégrés. Rapide à lancer, solide pour grandir."
       },
       {
         "name": "Claude",
-        "description": "Mon LLM principal pour les agents, les pipelines RAG et les fonctionnalités IA mises en production."
+        "description": "Mon modèle principal : via l'API pour les agents et le RAG, via Claude Code pour développer plus vite."
       },
       {
         "name": "OpenAI",
@@ -151,11 +151,11 @@
       },
       {
         "name": "MCP",
-        "description": "Model Context Protocol : connecter les LLM à de vrais outils, API et sources de données."
+        "description": "Model Context Protocol : donner aux agents un accès contrôlé à de vrais outils, API et données."
       },
       {
         "name": "Vercel",
-        "description": "Des déploiements sans configuration, une URL de prévisualisation par branche, un réseau edge par défaut."
+        "description": "Une prévisualisation par branche et des mises en production sans configuration pour les apps Next.js."
       },
       {
         "name": "Cloudflare",
@@ -163,11 +163,11 @@
       },
       {
         "name": "Docker",
-        "description": "Des environnements reproductibles, du développement local aux conteneurs de production."
+        "description": "Des environnements reproductibles, du développement local au VPS et aux conteneurs de production."
       },
       {
         "name": "GitHub",
-        "description": "Dépôts, pull requests, Actions pour la CI/CD et issues pour piloter le projet."
+        "description": "Relecture de code, CI/CD avec Actions et issues pour garder chaque livraison sous contrôle."
       }
     ]
   },
@@ -177,7 +177,7 @@
   },
   "Work": {
     "title": "Réalisations",
-    "intro": "Des produits, SaaS et outils IA que j'ai conçus et développés, de l'idée à la mise en production.",
+    "intro": "Des produits SaaS, des systèmes IA et des logiciels métier que j'ai conçus, développés et mis en production.",
     "count": "{count, plural, one {# projet} other {# projets}}",
     "filterType": "Type",
     "filterTools": "Outils",
@@ -192,7 +192,7 @@
   },
   "Services": {
     "title": "Services",
-    "intro": "Ce que je peux construire pour vous : produits web, SaaS et outils IA, de la première idée à la mise en production.",
+    "intro": "De l'idée à la production : SaaS, produits IA et sites web, construits vite et conçus pour durer.",
     "count": "{count, plural, one {# service} other {# services}}",
     "comingSoon": "Les services arrivent bientôt.",
     "allServices": "Tous les services",
@@ -204,7 +204,7 @@
   },
   "Blog": {
     "title": "Blog",
-    "intro": "Des notes sur la création de produits web, de SaaS et d'outils IA : ce qui a marché, et ce qui n'a pas marché.",
+    "intro": "Retours de terrain sur le développement logiciel avec l'IA : ce qui tient en production, et ce qui ne tient pas.",
     "count": "{count, plural, one {# article} other {# articles}}",
     "comingSoon": "Les premiers articles arrivent bientôt.",
     "allPosts": "Tous les articles",
@@ -221,7 +221,7 @@
   },
   "ContactPage": {
     "title": "Contact",
-    "intro": "Un projet, une question ou simplement envie d'échanger ? Envoyez-moi un message, je vous réponds sous 48 heures.",
+    "intro": "Un produit à construire, une fonctionnalité IA à livrer ou une base de code à faire évoluer ? Parlez-m'en, je réponds sous 48 heures.",
     "formTitle": "Envoyer un message"
   },
   "ContactForm": {

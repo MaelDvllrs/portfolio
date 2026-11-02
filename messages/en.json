@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "Maël Devillers — Fullstack Developer",
-    "description": "Fullstack developer building web products, SaaS and AI-powered experiences from idea to production.",
+    "title": "Maël Devillers — AI-Native Software Engineer",
+    "description": "Software engineer building SaaS, AI products and business software at the speed of AI, with the rigor of real engineering: architecture, security, tests, production.",
     "workTitle": "Work",
     "servicesTitle": "Services",
     "blogTitle": "Blog",
@@ -32,7 +32,7 @@
   },
   "Hero": {
     "bio": [
-      "Fullstack developer building web products, SaaS and AI-powered experiences from idea to production."
+      "AI-native software engineer. I build software at the speed of AI, with the standards of real engineering."
     ],
     "location": "Paris, France",
     "badgeCto": "CTO & Co-founder Wenoble",
@@ -47,21 +47,21 @@
     "nextSlide": "Next slide"
   },
   "About": {
-    "title": "Developer, builder, entrepreneur.",
-    "subtitle": "Building products, end to end.",
+    "title": "Engineer first. AI-native by default.",
+    "subtitle": "From idea to production, end to end.",
     "paragraphs": [
-      "I'm Maël, a French fullstack developer and co-founder of Wenoble.",
-      "I design and build web products, from the first idea to production.",
-      "My focus sits at the intersection of product, engineering and AI."
+      "I'm Maël, a software engineer and co-founder of Wenoble, with four years of full-stack work behind me.",
+      "I use LLMs, agents and Claude Code to move faster, and I own every line that ships: architecture, review, tests, security.",
+      "I work across the stack, from TypeScript and Python to Postgres, Docker and Linux servers, and I care about what happens after launch."
     ],
     "stats": [
       {
         "value": "4+",
-        "label": "Years of web development"
+        "label": "Years building software"
       },
       {
         "value": "50+",
-        "label": "Projects / clients"
+        "label": "Projects delivered"
       },
       {
         "value": "3",
@@ -95,55 +95,55 @@
     "more": "More"
   },
   "Stack": {
-    "title": "Tools I like to build with.",
+    "title": "The stack I build and ship with.",
     "tools": [
       {
         "name": "React",
-        "description": "My go-to UI library. Component-driven interfaces, from dashboards to marketing sites."
+        "description": "Component-driven interfaces, from internal dashboards to product UIs, built to stay maintainable."
       },
       {
         "name": "Next.js",
-        "description": "The framework behind most of my products: routing, server rendering and APIs in one place."
+        "description": "My default for products: server rendering, routing and APIs in one codebase, ready for production."
       },
       {
         "name": "TypeScript",
-        "description": "Types everywhere, front to back. Fewer bugs, safer refactors, faster onboarding."
+        "description": "Strict types end to end. It's also what keeps AI-generated code honest and reviewable."
       },
       {
         "name": "Tailwind CSS",
-        "description": "Utility-first styling to design directly in the code and keep UIs consistent."
+        "description": "Styling in the code, with a consistent design system instead of one-off CSS."
       },
       {
         "name": "Webflow",
-        "description": "Visual development for marketing sites that teams can edit themselves, without a developer."
+        "description": "Marketing sites teams can edit themselves, with a clean structure and custom code where it counts."
       },
       {
         "name": "Node.js",
-        "description": "JavaScript on the server for APIs, workers, scripts and integrations."
+        "description": "APIs, workers, scripts and integrations on the server: the glue of most products."
       },
       {
         "name": "Express",
-        "description": "Minimal Node.js server for lightweight APIs, webhooks and quick prototypes."
+        "description": "Lightweight APIs, webhooks and services when a full framework would be overkill."
       },
       {
         "name": "NestJS",
-        "description": "Structured backends for larger APIs: modules, dependency injection, clean architecture."
+        "description": "Structured backends for larger APIs: modules, dependency injection, testable architecture."
       },
       {
         "name": "PostgreSQL",
-        "description": "The database I trust: relational, reliable, and powerful with JSONB and extensions."
+        "description": "The database I trust: relational, transactional, and still flexible with JSONB."
       },
       {
         "name": "MongoDB",
-        "description": "Document database when the data is flexible, nested or changes shape often."
+        "description": "Document storage when data is deeply nested or its shape changes often."
       },
       {
         "name": "Supabase",
-        "description": "Postgres with auth, storage and realtime built in. Perfect to ship an MVP fast."
+        "description": "Postgres with auth, storage and access policies built in. Fast to start, solid to scale."
       },
       {
         "name": "Claude",
-        "description": "My main LLM for agents, RAG pipelines and AI features shipped to production."
+        "description": "My main model: through the API for agents and RAG, through Claude Code to build faster."
       },
       {
         "name": "OpenAI",
@@ -151,11 +151,11 @@
       },
       {
         "name": "MCP",
-        "description": "Model Context Protocol: connecting LLMs to real tools, APIs and data sources."
+        "description": "Model Context Protocol: giving agents controlled access to real tools, APIs and data."
       },
       {
         "name": "Vercel",
-        "description": "Zero-config deployments, preview URLs on every branch, edge network by default."
+        "description": "A preview on every branch and zero-config production deploys for Next.js apps."
       },
       {
         "name": "Cloudflare",
@@ -163,11 +163,11 @@
       },
       {
         "name": "Docker",
-        "description": "Reproducible environments, from local development to production containers."
+        "description": "Reproducible environments, from local development to VPS and production containers."
       },
       {
         "name": "GitHub",
-        "description": "Repositories, pull requests, Actions for CI/CD and issues to run the project."
+        "description": "Code review, CI/CD with Actions and issues to keep every release under control."
       }
     ]
   },
@@ -177,7 +177,7 @@
   },
   "Work": {
     "title": "Work",
-    "intro": "Products, SaaS and AI tools I designed and built, from idea to production.",
+    "intro": "SaaS products, AI systems and business software I designed, built and shipped to production.",
     "count": "{count, plural, one {# project} other {# projects}}",
     "filterType": "Type",
     "filterTools": "Tools",
@@ -192,7 +192,7 @@
   },
   "Services": {
     "title": "Services",
-    "intro": "What I can build for you: web products, SaaS and AI tools, from the first idea to production.",
+    "intro": "From idea to production: SaaS, AI products and websites, built fast and engineered to last.",
     "count": "{count, plural, one {# service} other {# services}}",
     "comingSoon": "Services coming soon.",
     "allServices": "All services",
@@ -204,7 +204,7 @@
   },
   "Blog": {
     "title": "Blog",
-    "intro": "Notes on building web products, SaaS and AI tools: what worked, what didn't.",
+    "intro": "Field notes on building software with AI: what holds up in production, and what doesn't.",
     "count": "{count, plural, one {# article} other {# articles}}",
     "comingSoon": "First articles coming soon.",
     "allPosts": "All posts",
@@ -221,7 +221,7 @@
   },
   "ContactPage": {
     "title": "Contact",
-    "intro": "A project, a question or just want to say hi? Send me a message and I'll get back to you within 48 hours.",
+    "intro": "A product to build, an AI feature to ship or a codebase to scale? Tell me about it. I reply within 48 hours.",
     "formTitle": "Send a message"
   },
   "ContactForm": {
