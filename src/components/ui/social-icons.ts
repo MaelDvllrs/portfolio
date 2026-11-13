@@ -1,4 +1,4 @@
-import { siGithub, siWebflow, siX } from "simple-icons";
+import { siDailydotdev, siGithub, siWebflow, siX } from "simple-icons";
 
 // Icônes des réseaux de site.links (tracés 24×24), par libellé : hero et footer.
 // LinkedIn n'est plus dans simple-icons : tracé officiel recopié.
@@ -8,4 +8,5 @@ export const SOCIAL_ICONS: Record<string, string> = {
   GitHub: siGithub.path,
   X: siX.path,
   Webflow: siWebflow.path,
+  "daily.dev": siDailydotdev.path,
 };

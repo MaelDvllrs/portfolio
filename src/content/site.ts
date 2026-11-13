@@ -18,6 +18,7 @@ export const site = {
     { label: "GitHub", href: "https://github.com/MaelDvllrs" },
     { label: "X", href: "https://x.com/marl_2304" },
     { label: "Webflow", href: "https://webflow.com/@maeldvllrs" },
+    { label: "daily.dev", href: "https://daily.dev/maeldvllrs" },
   ],
 
   // En-tête façon profil (src/components/sections/hero.tsx)
